@@ -1,0 +1,9 @@
+nav
+{
+    display: flex;
+    align-items: center;
+    height: 5em;
+    padding: 1em;
+    background-color: #222;
+    color: white;
+}
