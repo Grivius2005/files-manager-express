@@ -4,10 +4,10 @@ const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 const path = require("path")
 const PORT = process.env.PORT || 3000
-const FileManager = require("./operations/files-managment")
-const fManager = new FileManager(path.join(__dirname,"/files"))
+const FileManager = require("./classes/files-managment")
+const fManager = new FileManager(path.join(__dirname,"/upload"))
 
-app.use(express.static("static"))
+
 app.use(bodyParser.urlencoded({extended:true}))
 app.set("views",path.join(__dirname,"views"))
 app.engine("hbs",hbs({
@@ -23,16 +23,18 @@ app.use(express.json())
 
 
 app.get("/",(req,res)=>{
-    res.render("home.hbs")
+    const ctx = {
+        title:"Home"
+    }
+    res.render("home.hbs",ctx)
 })
 
 app.post("/addFile",(req,res)=>{
-    fManager.readTxtFile("file01").then((data)=>{
-        console.log(data)
-    })
+
     res.redirect("/")
 })
 
+app.use(express.static("static"))
 
 app.listen(PORT,()=>{
     console.log(`Server works on port: ${PORT}`)
