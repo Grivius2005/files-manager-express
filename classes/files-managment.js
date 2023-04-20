@@ -65,9 +65,9 @@ class FileManager
         }
     }
 
-    static isFile(path)
+    static isFile(dirFilePath)
     {
-        const name = path.substring(path.lastIndexOf("\\")+1)
+        const name = path.basename(dirFilePath)
         return name.includes(".");
     }
 

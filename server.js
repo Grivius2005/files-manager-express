@@ -15,11 +15,11 @@ app.engine("hbs",hbs({
     extname: '.hbs',
     partialsDir: "views/partials",
     helpers: {
-        getDirFileName: (path)=>{
-            return path.substring(path.lastIndexOf("\\")+1)
+        getDirFileName: (dirFilePath)=>{
+            return path.basename(dirFilePath);
         },
-        getExtention: (path)=>{
-            const ext = path.substring(path.lastIndexOf(".")+1)
+        getExtention: (filePath)=>{
+            const ext = (path.extname(filePath)).replace(".","");
             return formats.includes(ext) ? ext : "default"
         }
     }
