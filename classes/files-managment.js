@@ -3,11 +3,39 @@ const fsPromises = require("fs").promises
 
 class FileManager
 {
-    #storagePath
+    storagePath = ""
     constructor(storagePath)
     {
         this.storagePath = storagePath
     }
+
+
+    async getStorageData()
+    {
+        const res = await fsPromises.readdir(this.storagePath)
+        const fullPathsData = res.map((file)=>{
+            return path.join(this.storagePath,file)
+        })
+        const data = {
+            files:[],
+            folders:[]
+        }
+
+        for(let elem of fullPathsData)
+        {
+            if(FileManager.isFile(elem))
+            {
+                data.files.push(elem)
+            }
+            else
+            {
+                data.folders.push(elem)
+            }
+        }
+
+        return data;
+    }
+
 
     async readTxtFile(fileName)
     {
@@ -36,6 +64,16 @@ class FileManager
             throw new Error(`Save file error! (${ex})`)
         }
     }
+
+    static isFile(path)
+    {
+        const name = path.substring(path.lastIndexOf("\\")+1)
+        return name.includes(".");
+    }
+
 }
+
+
+
 
 module.exports = FileManager

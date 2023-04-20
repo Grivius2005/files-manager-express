@@ -44,6 +44,14 @@
     cursor: pointer;
 }
 
+.manager-view
+{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 1em 2em;
+}
+
 .home-dailogs > .content
 {
     width: 50%;
@@ -51,6 +59,13 @@
     background-color: red;
 }
 
+.folders-area, .files-area
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 25px;
+}
 
 
 

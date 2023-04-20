@@ -4,9 +4,9 @@ const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 const path = require("path")
 const PORT = process.env.PORT || 3000
+const formats = require("./data/formats.json")
 const FileManager = require("./classes/files-managment")
 const fManager = new FileManager(path.join(__dirname,"/upload"))
-
 
 app.use(bodyParser.urlencoded({extended:true}))
 app.set("views",path.join(__dirname,"views"))
@@ -15,7 +15,13 @@ app.engine("hbs",hbs({
     extname: '.hbs',
     partialsDir: "views/partials",
     helpers: {
-
+        getDirFileName: (path)=>{
+            return path.substring(path.lastIndexOf("\\")+1)
+        },
+        getExtention: (path)=>{
+            const ext = path.substring(path.lastIndexOf(".")+1)
+            return formats.includes(ext) ? ext : "default"
+        }
     }
 }))
 app.set("view engine","hbs")
@@ -23,10 +29,18 @@ app.use(express.json())
 
 
 app.get("/",(req,res)=>{
-    const ctx = {
-        title:"Home"
-    }
-    res.render("home.hbs",ctx)
+
+    fManager.getStorageData()
+    .then((data)=>{
+        const ctx = {
+            title:"Home",
+            storageData:data
+        }
+        res.render("home.hbs",ctx)
+    })
+
+
+
 })
 
 app.post("/addFile",(req,res)=>{

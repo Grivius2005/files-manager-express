@@ -18,11 +18,17 @@
     </aside>
     <div id="main-content">
         <div class="manager-view">
+            <h2>Folders</h2>
             <div class="folders-area">
-
+                {{#each storageData.folders}}
+                    {{> folder}}
+                {{/each}}
             </div>
+            <h2>Files</h2>
             <div class="files-area">
-                
+                {{#each storageData.files}}
+                    {{> file}}
+                {{/each}}
             </div>
         </div>
 
