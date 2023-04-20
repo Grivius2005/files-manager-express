@@ -35,4 +35,9 @@ aside
         min-width: none;
         width: 100%;
     }
+    #main-content
+    {
+        height: auto;
+        width: 100%;
+    }
 }
