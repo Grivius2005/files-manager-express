@@ -9,7 +9,7 @@ main
 #main-content
 {
     height: 100%;
-    width: 80em;
+    width: 90%;
     padding-top: 15px;
     overflow: auto;
     scroll-behavior: smooth;
@@ -39,5 +39,6 @@ aside
     {
         height: auto;
         width: 100%;
+        overflow: auto;
     }
 }
