@@ -52,11 +52,50 @@
     padding: 1em 2em;
 }
 
-.home-dailogs > .content
+
+
+.home-dialogs > .content
 {
-    width: 50%;
-    height: 50%;
-    background-color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:1em;
+    width: 40%;
+    height: 40%;
+    background: linear-gradient(45deg,var(--purple-one),var(--purple-two));
+    border-radius: 15px;
+    font-size: 2em;
+    color: white;
+}
+
+.home-dialogs > .content > .form-inputs
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    font-size: 1em;
+}
+
+.home-dialogs > .content > .form-inputs input
+{
+    width: 15em;
+    height: 2em;
+}
+
+.home-dialogs > .content > .form-buttons > button
+{
+    width: 10em;
+    height: 2.5em;
+    font-size: 0.5em;
+    border-radius: 15px;
+}
+
+.home-dialogs > .content > .form-buttons > button:hover
+{
+    cursor: pointer;
 }
 
 .folders-area, .files-area

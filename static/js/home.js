@@ -3,7 +3,6 @@ const folderDialog = document.getElementById("folderDialog")
 
 function switchTxtFileDialog()
 {
-    return false;
     if(!fileDialog.open)
     {
         fileDialog.showModal();
@@ -17,7 +16,6 @@ function switchTxtFileDialog()
 
 function switchFolderDialog()
 {
-    return false;
     if(!folderDialog.open)
     {
         folderDialog.showModal();

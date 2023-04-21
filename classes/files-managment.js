@@ -51,12 +51,25 @@ class FileManager
         } 
     }
 
-    async saveTxtFile(fileName)
+    async createTxtFile(fileName)
     {
         const filePath = path.join(this.storagePath, `${fileName}.txt`);
         try
         {
-            await fsPromises.writeFile(filePath,"test");
+            await fsPromises.writeFile(filePath,"");
+            return true;
+        }
+        catch(ex)
+        {
+            throw new Error(`Save file error! (${ex})`)
+        }
+    }
+    async createFolder(folderName)
+    {
+        const folderPath = path.join(this.storagePath, `${folderName}`);
+        try
+        {
+            await fsPromises.mkdir(folderPath)
             return true;
         }
         catch(ex)

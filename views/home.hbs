@@ -37,14 +37,32 @@
 
 
 <dialog id="fileDialog" class="home-dialogs">
-    <form>
+    <form method="post" action="/addTxtFile" class="content">
+        <h2>Txt File</h2>
+        <div class="form-inputs">
+            <label for="filename">File name</label>
+            <input type="text" name="filename">
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" onclick="switchTxtFileDialog()">Create</button>
+            <button type="button" onclick="switchTxtFileDialog()">Cancel</button>
+        </div>
 
     </form>
 </dialog>
 
 <dialog id="folderDialog" class="home-dialogs">
-    <form>
-        
+    <form method="post" action="/addFolder" class="content">
+        <h2>Folder</h2>
+        <div class="form-inputs">
+            <label for="foldername">Folder name</label>
+            <input type="text" name="foldername">
+        </div>
+        <div class="form-buttons">
+            <button type="submit" onclick="switchFolderDialog()">Create</button>
+            <button type="button" onclick="switchFolderDialog()">Cancel</button>
+        </div>
     </form>
 </dialog>
 
