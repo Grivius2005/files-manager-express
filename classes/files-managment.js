@@ -1,4 +1,5 @@
 const path = require("path")
+const fs = require("fs")
 const fsPromises = require("fs").promises
 
 class FileManager
@@ -53,7 +54,12 @@ class FileManager
 
     async createTxtFile(fileName)
     {
-        const filePath = path.join(this.storagePath, `${fileName}.txt`);
+        let filePath = path.join(this.storagePath, `${fileName}.txt`);
+        if(this.checkIfExists(filePath))
+        {
+            fileName = fileName + "_copy_" + Date.now().toString()
+            filePath = path.join(this.storagePath, `${fileName}.txt`);
+        }
         try
         {
             await fsPromises.writeFile(filePath,"");
@@ -66,7 +72,12 @@ class FileManager
     }
     async createFolder(folderName)
     {
-        const folderPath = path.join(this.storagePath, `${folderName}`);
+        let folderPath = path.join(this.storagePath, `${folderName}`);
+        if(this.checkIfExists(folderPath))
+        {
+            folderName = folderName + "_copy_" + Date.now().toString()
+            folderPath = path.join(this.storagePath, `${folderName}`);
+        }
         try
         {
             await fsPromises.mkdir(folderPath)
@@ -82,6 +93,13 @@ class FileManager
     {
         const name = path.basename(dirFilePath)
         return name.includes(".");
+    }
+
+    async checkIfExists(dirFilePath)
+    {
+        return fsPromises.access(dirFilePath, fs.constants.F_OK)
+        .then(()=>true)
+        .catch(()=>false)
     }
 
 }
