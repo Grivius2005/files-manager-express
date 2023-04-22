@@ -23,7 +23,8 @@ class FileManager
 
         for(let elem of fullPathsData)
         {
-            if(FileManager.isFile(elem))
+            const res = await FileManager.isFile(elem)
+            if(res)
             {
                 data.files.push(elem)
             }
@@ -118,10 +119,10 @@ class FileManager
         }
     }
 
-    static isFile(dirFilePath)
+    static async isFile(dirFilePath)
     {
-        const name = path.basename(dirFilePath)
-        return name.includes(".");
+        return await fsPromises.lstat(dirFilePath)
+        .then(res=>!res.isDirectory());
     }
     
 
