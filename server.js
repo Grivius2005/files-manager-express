@@ -28,48 +28,69 @@ app.set("view engine","hbs")
 app.use(express.json())
 
 
+
+
 app.get("/",(req,res)=>{
     fManager.getStorageData()
     .then((data)=>{
         const ctx = {
             title:"Home",
-            storageData:data
+            storageData:data,
         }
         res.render("home.hbs",ctx)
     })
-
-
-
 })
 
 app.post("/addTxtFile",(req,res)=>{
     const filename = req.body.filename
-    try
-    {
-        fManager.createTxtFile(filename).then(()=>{
-            res.redirect("/")
-        })
-    }
-    catch(err)
-    {
+    fManager.createTxtFile(filename)
+    .then(()=>{
+        res.redirect("/")
+    })
+    .catch((err)=>{
         console.log(err)
-    }
-
+        res.redirect("/")
+    })
 
 })
 
 app.post("/addDir",(req,res)=>{
     const dirname = req.body.dirname
-    try
-    {
-        fManager.createDir(dirname).then(()=>{
-            res.redirect("/")
-        })
-    }
-    catch(err)
-    {
+    fManager.createDir(dirname)
+    .then(()=>{
+        res.redirect("/")
+    })
+    .catch((err)=>{
         console.log(err)
-    }
+        res.redirect("/")
+    })
+})
+
+app.post("/delFile",(req,res)=>
+{
+    fManager.deleteFile(req.body.path)
+    .then(()=>{
+        res.redirect("/")
+    })
+    .catch((err)=>{
+        console.log(err)
+        res.redirect("/")
+    })
+
+})
+
+
+app.post("/delDir",(req,res)=>
+{
+    fManager.deleteDir(req.body.path)
+    .then(()=>{
+        res.redirect("/")
+    })
+    .catch((err)=>{
+        console.log(err)
+        res.redirect("/")
+    })
+
 })
 
 app.get("/getFile",(req,res)=>
@@ -80,7 +101,6 @@ app.get("/getFile",(req,res)=>
         return
     }
     res.redirect("/")
-
 })
 
 

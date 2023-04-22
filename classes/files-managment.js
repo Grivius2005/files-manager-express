@@ -78,8 +78,29 @@ class FileManager
         }
     }
 
-    async deleteDirFile(dirFilePath)
+    async deleteFile(filePath)
     {
+        try
+        {
+            await fsPromises.unlink(filePath)
+        }
+        catch(ex)
+        {
+            throw new Error(`Delete directory error! (${ex})`)
+        }
+    }
+
+
+    async deleteDir(dirPath)
+    {
+        try
+        {
+            await fsPromises.rmdir(dirPath)
+        }
+        catch(ex)
+        {
+            throw new Error(`Delete directory error! (${ex})`)
+        }
 
     }
 

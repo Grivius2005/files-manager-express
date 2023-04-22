@@ -8,11 +8,13 @@
 
 .dir
 {
+    position: relative;
     background-color: var(--purple-four);
 }
 
 .file
 {
+    position: relative;
     background-color: var(--green-one);
 }
 
@@ -31,6 +33,23 @@
     text-align: center;
     padding: 10px;
     font-size: 1.5em;
+}
+
+.delete
+{
+    position: absolute;
+    top: 0.25em;
+    right: 0.5em;
+    color: black;
+    z-index: 3;
+    font-size: 1em;
+    background: none;
+    border: none;
+}
+
+.delete:hover
+{
+    cursor: pointer;
 }
 
 

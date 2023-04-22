@@ -5,7 +5,8 @@
     <div class="data">
         <p>{{getDirFileName this}}</p>
     </div>
-    <form class="delete">
-
-    </form>
+        <form  method="POST" action="/delDir">
+            <input type="hidden" name="path" value="{{this}}">
+            <button type="submit" class="delete" onclick="return confirm('Are you sure you want to delete this?')">X</button>
+        </form>
 </div>
