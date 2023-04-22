@@ -1,12 +1,16 @@
-dialog
+dialog[open]
 {
-    display: flex;
     position: fixed;
-    justify-content: center;
-    align-items: center;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
     z-index: 3;
-    background-color: rgba(0,0,0,0.5);
+    filter: none !important;
+    background-color: transparent !important;
     border: none;
 }
