@@ -1,4 +1,4 @@
-.folder, .file
+.dir, .file
 {
     width: fit-content;
     height: fit-content;
@@ -6,7 +6,7 @@
     border-radius: 10px;
 }
 
-.folder
+.dir
 {
     background-color: var(--purple-four);
 }
@@ -16,14 +16,14 @@
     background-color: var(--green-one);
 }
 
-.file > .image, .folder > .image
+.file > .image, .dir > .image
 {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.file > .data, .folder > .data
+.file > .data, .dir > .data
 {
     display: flex;
     justify-content: center;

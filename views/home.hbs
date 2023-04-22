@@ -1,9 +1,9 @@
 <main>
     <aside>
         <div class="manager-control">
-            <div class="button" onclick="switchFolderDialog()">
+            <div class="button" onclick="switchDirDialog()">
                <div class="content">
-                    <p>Add folder</p>
+                    <p>Add directorie</p>
                 </div>
                 <div class="fold"></div>
             </div>
@@ -18,10 +18,10 @@
     </aside>
     <div id="main-content">
         <div class="manager-view">
-            <h2>Folders</h2>
-            <div class="folders-area">
-                {{#each storageData.folders}}
-                    {{> folder}}
+            <h2>Directories</h2>
+            <div class="dirs-area">
+                {{#each storageData.dirs}}
+                    {{> directorie}}
                 {{/each}}
             </div>
             <h2>Files</h2>
@@ -52,16 +52,16 @@
     </form>
 </dialog>
 
-<dialog id="folderDialog" class="home-dialogs">
-    <form method="post" action="/addFolder" class="content">
-        <h2>Folder</h2>
+<dialog id="dirDialog" class="home-dialogs">
+    <form method="post" action="/addDir" class="content">
+        <h2>Directorie</h2>
         <div class="form-inputs">
-            <label for="foldername">Folder name</label>
-            <input type="text" name="foldername">
+            <label for="dirname">Directorie name</label>
+            <input type="text" name="dirname">
         </div>
         <div class="form-buttons">
-            <button type="submit" onclick="switchFolderDialog()">Create</button>
-            <button type="button" onclick="switchFolderDialog()">Cancel</button>
+            <button type="submit" onclick="switchDirDialog()">Create</button>
+            <button type="button" onclick="switchDirDialog()">Cancel</button>
         </div>
     </form>
 </dialog>

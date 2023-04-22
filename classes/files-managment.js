@@ -18,7 +18,7 @@ class FileManager
         })
         const data = {
             files:[],
-            folders:[]
+            dirs:[]
         }
 
         for(let elem of fullPathsData)
@@ -29,7 +29,7 @@ class FileManager
             }
             else
             {
-                data.folders.push(elem)
+                data.dirs.push(elem)
             }
         }
 
@@ -58,24 +58,29 @@ class FileManager
     }
 
 
-    async createFolder(folderName)
+    async createDir(dirName)
     {
-        let folderPath = path.join(this.storagePath, `${folderName}`);
-        const check = await this.ifExists(folderPath)
+        let dirPath = path.join(this.storagePath, `${dirName}`);
+        const check = await this.ifExists(dirPath)
         if(check)
         {
-            folderName = folderName + "_copy_" + Date.now().toString()
-            folderPath = path.join(this.storagePath, `${folderName}`);
+            dirName = dirName + "_copy_" + Date.now().toString()
+            dirPath = path.join(this.storagePath, `${dirName}`);
         }
         try
         {
-            await fsPromises.mkdir(folderPath)
+            await fsPromises.mkdir(dirPath)
             return true;
         }
         catch(ex)
         {
-            throw new Error(`Save folder error! (${ex})`)
+            throw new Error(`Save dir error! (${ex})`)
         }
+    }
+
+    async deleteDirFile(dirFilePath)
+    {
+
     }
 
 

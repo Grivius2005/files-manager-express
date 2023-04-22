@@ -45,17 +45,32 @@ app.get("/",(req,res)=>{
 
 app.post("/addTxtFile",(req,res)=>{
     const filename = req.body.filename
-    fManager.createTxtFile(filename).then(()=>{
-        res.redirect("/")
-    })
+    try
+    {
+        fManager.createTxtFile(filename).then(()=>{
+            res.redirect("/")
+        })
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
+
 
 })
 
-app.post("/addFolder",(req,res)=>{
-    const foldername = req.body.foldername
-    fManager.createFolder(foldername).then(()=>{
-        res.redirect("/")
-    })
+app.post("/addDir",(req,res)=>{
+    const dirname = req.body.dirname
+    try
+    {
+        fManager.createDir(dirname).then(()=>{
+            res.redirect("/")
+        })
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
 })
 
 app.use(express.static("static"))

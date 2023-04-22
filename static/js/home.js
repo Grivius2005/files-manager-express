@@ -1,5 +1,5 @@
 const fileDialog = document.getElementById("fileDialog")
-const folderDialog = document.getElementById("folderDialog")
+const dirDialog = document.getElementById("dirDialog")
 
 function switchTxtFileDialog()
 {
@@ -14,14 +14,14 @@ function switchTxtFileDialog()
 
 }
 
-function switchFolderDialog()
+function switchDirDialog()
 {
-    if(!folderDialog.open)
+    if(!dirDialog.open)
     {
-        folderDialog.showModal();
+        dirDialog.showModal();
     } 
     else 
     {
-        folderDialog.close();
+        dirDialog.close();
     }
 }

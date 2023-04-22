@@ -98,7 +98,7 @@
     cursor: pointer;
 }
 
-.folders-area, .files-area
+.dirs-area, .files-area
 {
     display: flex;
     flex-direction: row;
