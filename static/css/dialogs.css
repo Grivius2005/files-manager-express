@@ -9,7 +9,7 @@ dialog[open]
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    z-index: 3;
+    z-index: 5;
     filter: none !important;
     background-color: transparent !important;
     border: none;
