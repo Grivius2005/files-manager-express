@@ -1,5 +1,4 @@
 const path = require("path")
-const fs = require("fs")
 const fsPromises = require("fs").promises
 
 class FileManager
@@ -38,24 +37,11 @@ class FileManager
     }
 
 
-    async readTxtFile(fileName)
-    {
-        const filePath = path.join(this.storagePath, `${fileName}.txt`);
-        try
-        {
-            const data = await fsPromises.readFile(filePath,"utf-8");
-            return data
-        }
-        catch(ex)
-        {
-            throw new Error(`Read file error! (${ex})`)
-        } 
-    }
-
     async createTxtFile(fileName)
     {
         let filePath = path.join(this.storagePath, `${fileName}.txt`);
-        if(this.checkIfExists(filePath))
+        const check = await this.ifExists(filePath)
+        if(check)
         {
             fileName = fileName + "_copy_" + Date.now().toString()
             filePath = path.join(this.storagePath, `${fileName}.txt`);
@@ -70,10 +56,13 @@ class FileManager
             throw new Error(`Save file error! (${ex})`)
         }
     }
+
+
     async createFolder(folderName)
     {
         let folderPath = path.join(this.storagePath, `${folderName}`);
-        if(this.checkIfExists(folderPath))
+        const check = await this.ifExists(folderPath)
+        if(check)
         {
             folderName = folderName + "_copy_" + Date.now().toString()
             folderPath = path.join(this.storagePath, `${folderName}`);
@@ -85,7 +74,21 @@ class FileManager
         }
         catch(ex)
         {
-            throw new Error(`Save file error! (${ex})`)
+            throw new Error(`Save folder error! (${ex})`)
+        }
+    }
+
+
+    async ifExists(dirFilePath)
+    {
+        try
+        {
+            await fsPromises.access(dirFilePath)
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 
@@ -94,15 +97,12 @@ class FileManager
         const name = path.basename(dirFilePath)
         return name.includes(".");
     }
-
-    async checkIfExists(dirFilePath)
-    {
-        return fsPromises.access(dirFilePath, fs.constants.F_OK)
-        .then(()=>true)
-        .catch(()=>false)
-    }
+    
 
 }
+
+
+
 
 
 
