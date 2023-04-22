@@ -29,11 +29,6 @@ app.use(express.json())
 
 
 app.get("/",(req,res)=>{
-    if(req.query.path != undefined)
-    {
-        res.download(req.query.path)
-        return
-    }
     fManager.getStorageData()
     .then((data)=>{
         const ctx = {
@@ -75,6 +70,17 @@ app.post("/addDir",(req,res)=>{
     {
         console.log(err)
     }
+})
+
+app.get("/getFile",(req,res)=>
+{
+    if(req.query.path != undefined)
+    {
+        res.download(req.query.path)
+        return
+    }
+    res.redirect("/")
+
 })
 
 
