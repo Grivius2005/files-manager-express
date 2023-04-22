@@ -1,6 +1,7 @@
-dialog[open]
+dialog
 {
     display: flex;
+    position: fixed;
     justify-content: center;
     align-items: center;
     width: 100vw;
