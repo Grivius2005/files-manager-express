@@ -1,10 +1,10 @@
 <a href="/getFile?path={{this}}">
     <div class="file">
         <div class="image">
-            <img src="gfx/files_icons/{{getExtention this}}.png" alt="{{getDirFileName this}}">
+            <img src="gfx/files_icons/{{getExtention this}}.png" alt="{{getFileName this}}">
         </div>
         <div class="data">
-            <p>{{getDirFileName this}}</p>
+            <p>{{getFileName this}}</p>
 
         </div>
         <form method="POST" action="/delFile">

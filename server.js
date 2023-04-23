@@ -14,11 +14,19 @@ app.engine("hbs",hbs({
     extname: '.hbs',
     partialsDir: "views/partials",
     helpers: {
-        getDirFileName: (dirFilePath)=>{
-            let name = path.basename(dirFilePath);
+        getFileName: (filePath)=>{
+            let name = path.basename(filePath);
             if(name.substring(0,name.lastIndexOf(".")).length > 12)
             {
-                name = name.substring(0,12) + "[...]" + path.extname(dirFilePath)
+                name = name.substring(0,12) + "[...]" + path.extname(filePath)
+            }
+            return name;
+        },
+        getDirName: (dirPath)=>{
+            let name = path.basename(dirPath);
+            if(name.length > 12)
+            {
+                name = name.substring(0,12) + "[...]"
             }
             return name;
         },
