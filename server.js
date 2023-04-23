@@ -100,16 +100,16 @@ app.post("/delDir",(req,res)=>
 {
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
-        
+        fManager.deleteDir(fields.path)
+        .then(()=>{
+            res.redirect("/")
+        })
+        .catch((err)=>{
+            console.log(err)
+            res.redirect("/")
+        })
     })
-    fManager.deleteDir(req.body.path)
-    .then(()=>{
-        res.redirect("/")
-    })
-    .catch((err)=>{
-        console.log(err)
-        res.redirect("/")
-    })
+
 
 })
 
