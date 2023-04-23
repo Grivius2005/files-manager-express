@@ -13,6 +13,7 @@ class FileManager
     async getStorageData()
     {
         const res = await fsPromises.readdir(this.storagePath)
+
         const fullPathsData = res.map((file)=>{
             return path.join(this.storagePath,file)
         })
@@ -104,6 +105,28 @@ class FileManager
         }
 
     }
+
+    async uploadFile(filePath,fileOrginalName)
+    {
+        let newFilePath = path.join(this.storagePath,fileOrginalName)
+        const check = await this.ifExists(newFilePath)
+        if(check)
+        {
+            const basename = path.parse(newFilePath).name
+            const ext = path.extname(newFilePath)
+            fileOrginalName = basename + "_copy_" + Date.now().toString() + ext
+            newFilePath = path.join(this.storagePath,fileOrginalName)
+        }
+        try
+        {
+            await fsPromises.rename(filePath,newFilePath)
+        }
+        catch(ex)
+        {
+            throw new Error(`Upload file error! (${ex})`)
+        }
+    }
+
 
 
     async ifExists(dirFilePath)

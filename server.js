@@ -1,14 +1,13 @@
 const express = require("express")
 const app = express()
 const hbs = require("express-handlebars")
-const bodyParser = require("body-parser")
 const path = require("path")
 const PORT = process.env.PORT || 3000
 const formats = require("./data/formats.json")
 const FileManager = require("./classes/files-managment")
-const fManager = new FileManager(path.join(__dirname,"/upload"))
+const fManager = new FileManager(path.join(__dirname,"upload"))
+const formidable = require("formidable")
 
-app.use(bodyParser.urlencoded({extended:true}))
 app.set("views",path.join(__dirname,"views"))
 app.engine("hbs",hbs({
     defaultLayout: 'main.hbs',
@@ -16,7 +15,12 @@ app.engine("hbs",hbs({
     partialsDir: "views/partials",
     helpers: {
         getDirFileName: (dirFilePath)=>{
-            return path.basename(dirFilePath);
+            let name = path.basename(dirFilePath);
+            if(name.substring(0,name.lastIndexOf(".")).length > 12)
+            {
+                name = name.substring(0,12) + "[...]" + path.extname(dirFilePath)
+            }
+            return name;
         },
         getExtention: (filePath)=>{
             const ext = (path.extname(filePath)).replace(".","");
@@ -29,8 +33,8 @@ app.use(express.json())
 
 
 
-
 app.get("/",(req,res)=>{
+
     fManager.getStorageData()
     .then((data)=>{
         const ctx = {
@@ -42,46 +46,62 @@ app.get("/",(req,res)=>{
 })
 
 app.post("/addTxtFile",(req,res)=>{
-    const filename = req.body.filename
-    fManager.createTxtFile(filename)
-    .then(()=>{
-        res.redirect("/")
+    let form = formidable({})
+    form.parse(req, (err,fields,files)=>{
+        const filename = fields.filename
+        fManager.createTxtFile(filename)
+        .then(()=>{
+            res.redirect("/")
+        })
+        .catch((err)=>{
+            console.log(err)
+            res.redirect("/")
+        })
     })
-    .catch((err)=>{
-        console.log(err)
-        res.redirect("/")
-    })
+
 
 })
 
 app.post("/addDir",(req,res)=>{
-    const dirname = req.body.dirname
-    fManager.createDir(dirname)
-    .then(()=>{
-        res.redirect("/")
+    let form = formidable({})
+    form.parse(req, (err,fields,files)=>{
+        const dirname = fields.dirname
+        fManager.createDir(dirname)
+        .then(()=>{
+            res.redirect("/")
+        })
+        .catch((err)=>{
+            console.log(err)
+            res.redirect("/")
+        })
     })
-    .catch((err)=>{
-        console.log(err)
-        res.redirect("/")
-    })
+
 })
 
 app.post("/delFile",(req,res)=>
 {
-    fManager.deleteFile(req.body.path)
-    .then(()=>{
-        res.redirect("/")
+    let form = formidable({})
+    form.parse(req, (err,fields,files)=>{
+        fManager.deleteFile(fields.path)
+        .then(()=>{
+            res.redirect("/")
+        })
+        .catch((err)=>{
+            console.log(err)
+            res.redirect("/")
+        })
     })
-    .catch((err)=>{
-        console.log(err)
-        res.redirect("/")
-    })
+
 
 })
 
 
 app.post("/delDir",(req,res)=>
 {
+    let form = formidable({})
+    form.parse(req, (err,fields,files)=>{
+        
+    })
     fManager.deleteDir(req.body.path)
     .then(()=>{
         res.redirect("/")
@@ -102,6 +122,42 @@ app.get("/getFile",(req,res)=>
     }
     res.redirect("/")
 })
+
+app.post("/upload",(req,res)=>
+{
+    let form = formidable({})
+    form.uploadDir = path.join(__dirname,"upload")
+    form.keepExtensions = true
+    form.multiples = true
+    form.parse(req,(err, fields, files) => 
+    {
+        if(JSON.stringify(files) == "{}")
+        {
+            res.redirect("/")
+            return
+        }
+        if(!files.uploadFiles.length)
+        {
+            fManager.uploadFile(files.uploadFiles.path,files.uploadFiles.name)
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
+        else
+        {
+            for(let i=0;i<files.uploadFiles.length;i++)
+            {
+                fManager.uploadFile(files.uploadFiles[i].path,files.uploadFiles[i].name)
+                .catch((err)=>{
+                    console.log(err)
+                })
+            } 
+        }
+        res.redirect("/")
+    });
+})
+
+
 
 
 app.use(express.static("static"))

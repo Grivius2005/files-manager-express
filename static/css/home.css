@@ -44,6 +44,104 @@
     cursor: pointer;
 }
 
+.manager-control > .upload
+{
+    display: flex;
+    width: 100%;
+    height: 3em;
+    background: linear-gradient(0,var(--yellow-one),var(--yellow-one));
+    box-shadow: 0px 0px 5px 1px black;
+    border-radius: 10px;
+    transition: 0.5s; 
+}
+
+.manager-control > .upload > .content
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 85%;
+    height: 100%;
+    border-radius: 10px;
+    color: black;
+}
+
+
+
+.manager-control > .upload > .content > .uploadBtn
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    height: 100%;
+    border: none;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background: linear-gradient(0,var(--red-one),var(--red-two));
+    transition: 0.5s;
+}
+
+.manager-control > .upload > .content > .uploadBtn:hover
+{
+    cursor: pointer;
+}
+
+.manager-control > .upload > .content > .uploadBtn > img
+{
+    height: 75%;
+}
+
+.manager-control > .upload > .content > .uploadBtn > p
+{
+    background-color: transparent;
+    font-size: 1.25em;
+}
+
+.manager-control > .upload > .content > input[type="file"]
+{
+    height: fit-content;
+    width: 75%;
+    max-width: 12em;
+    font-size: 0.75em;
+    padding: 5px;
+}
+.manager-control > .upload > .content > input[type="file"]:hover
+{
+    cursor: pointer;
+}
+
+.manager-control > .upload > .content > input[type="file"]::file-selector-button
+{
+    display: none;
+}
+
+
+
+.manager-control > .upload > .fold
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    height: 100%;
+    border: none;
+    color: white;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: linear-gradient(0,var(--red-one),var(--red-two));
+    transition: 0.5s;
+
+}
+
+
+.manager-control > .upload > .fold:hover
+{
+    cursor: pointer;
+    transform: scale(105%);
+}
+
+
 .manager-view
 {
     display: flex;
@@ -138,6 +236,7 @@
         min-width: 80vw;
         min-height: 80vh;
     }
+    
 
     .home-dialogs > .content > .form-inputs input
     {

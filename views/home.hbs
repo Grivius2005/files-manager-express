@@ -13,6 +13,15 @@
                 </div>
                 <div class="fold"></div>
             </div>
+            <form class="upload" method="POST" action="/upload" enctype="multipart/form-data">
+                <div class="content">
+                    <label for="uploadFiles" class="uploadBtn">
+                        <img src="gfx/file-upload.png">
+                    </label>
+                    <input type="file" name="uploadFiles" id="uploadFiles" multiple="" required="">
+                </div>
+                <button type="submit" class="fold">&#10148;</button>
+            </form>
         </div>
 
     </aside>
@@ -41,7 +50,7 @@
         <h2>Txt File</h2>
         <div class="form-inputs">
             <label for="filename">File name</label>
-            <input type="text" name="filename">
+            <input type="text" name="filename" id="filename">
         </div>
 
         <div class="form-buttons">
@@ -57,7 +66,7 @@
         <h2>Directorie</h2>
         <div class="form-inputs">
             <label for="dirname">Directorie name</label>
-            <input type="text" name="dirname">
+            <input type="text" name="dirname" id="dirname">
         </div>
         <div class="form-buttons">
             <button type="submit" onclick="switchDirDialog()">Create</button>
