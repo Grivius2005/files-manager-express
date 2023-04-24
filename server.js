@@ -32,7 +32,7 @@ app.engine("hbs",hbs({
         },
         getExtention: (filePath)=>{
             const ext = (path.extname(filePath)).replace(".","");
-            return formats.includes(ext) ? ext : "default"
+            return formats.includes(ext.toLowerCase()) ? ext : "default"
         }
     }
 }))
