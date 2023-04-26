@@ -56,6 +56,7 @@ app.engine("hbs",hbs({
                     short:pathParts[i]
                 })
             }
+            console.log(pathObjects)
             return pathObjects
         },
         isInDir: (dirPath) => {
