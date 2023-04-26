@@ -36,10 +36,8 @@ app.engine("hbs",hbs({
             return formats.includes(ext) ? ext : "default"
         },
         pathFormat: (dirPath)=>{
-            console.log(dirPath)
-            const pathParts = dirPath.split("\\")
-            console.log(pathParts)
-            pathParts.shift()
+            let pathParts = dirPath.includes("/") ? dirPath.split("/") : dirPath.split("\\")
+            pathParts = pathParts.filter((part=>part))
             const pathObjects = [
                 {
                     full: "",
@@ -51,18 +49,17 @@ app.engine("hbs",hbs({
                 let newFullPath = ""
                 for(let j=i;j>=0;j--)
                 {
-                    newFullPath = path.join(pathParts[j])
+                    newFullPath = path.join(newFullPath,pathParts[j])
                 }
                 pathObjects.push({
                     full:newFullPath,
                     short:pathParts[i]
                 })
             }
-            console.log(pathObjects)
             return pathObjects
         },
         isInDir: (dirPath) => {
-            return dirPath != "" && dirPath != "\\"
+            return dirPath != "" && dirPath != "\\" && dirPath != "/"
         }
     }
 }))
