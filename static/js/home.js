@@ -1,5 +1,6 @@
 const fileDialog = document.getElementById("fileDialog")
 const dirDialog = document.getElementById("dirDialog")
+const renameDirDialog = document.getElementById("renameDirDialog")
 const uploadFiles = document.getElementById("uploadFiles")
 
 const MB = 1048576;
@@ -40,4 +41,28 @@ function switchDirDialog()
         document.body.style.filter = ""
         dirDialog.close();
     }
+}
+
+function switchRenameDirDialog()
+{
+    if(!renameDirDialog.open)
+    {
+        document.body.style.filter = "brightness(0.5)"
+        renameDirDialog.showModal();
+    } 
+    else 
+    {
+        document.body.style.filter = ""
+        renameDirDialog.close();
+    }
+}
+
+function validateInput(sender)
+{
+    if(sender.value == "")
+    {
+        alert("Name can't be empty!")
+        return false
+    }
+    return true
 }

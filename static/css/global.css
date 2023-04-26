@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300&display=swap');
+
 :root
 {
     --nav-color: #0A4D68;
     --aside-color: #088395;
+
 
     --lime-one: #569DAA;
     --lime-two: #05BFDB;
@@ -46,6 +49,7 @@ body
     height: 100%;
     background-image: url("../gfx/body-texture.png");
     color: white;
+    font-family: 'Chakra Petch', sans-serif;
 }
 
 

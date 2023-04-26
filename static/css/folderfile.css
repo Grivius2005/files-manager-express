@@ -1,0 +1,37 @@
+.folder, .file
+{
+    width: fit-content;
+    height: fit-content;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.folder
+{
+    background-color: var(--purple-four);
+}
+
+.file
+{
+    background-color: var(--green-one);
+}
+
+.file > .image, .folder > .image
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.file > .data, .folder > .data
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.5em;
+}
+
+
+

@@ -10,21 +10,23 @@ class FileManager
     }
 
 
-    async getStorageData()
+    async getStorageData(baseStorePath)
     {
         const res = await fsPromises.readdir(this.storagePath)
-
-        const fullPathsData = res.map((file)=>{
-            return path.join(this.storagePath,file)
+        const pathsData = res.map((file)=>{
+            const full =  path.join(this.storagePath,file)
+            return full.replace(baseStorePath,"")
         })
+
         const data = {
             files:[],
             dirs:[]
         }
 
-        for(let elem of fullPathsData)
+        for(let elem of pathsData)
         {
-            const res = await FileManager.isFile(elem)
+            const fullPath = path.join(baseStorePath,elem)
+            const res = await FileManager.isFile(fullPath)
             if(res)
             {
                 data.files.push(elem)
@@ -34,7 +36,6 @@ class FileManager
                 data.dirs.push(elem)
             }
         }
-
         return data;
     }
 
@@ -97,7 +98,7 @@ class FileManager
     {
         try
         {
-            await fsPromises.rmdir(dirPath)
+            await fsPromises.rm(dirPath,{ recursive: true })
         }
         catch(ex)
         {
@@ -106,24 +107,28 @@ class FileManager
 
     }
 
-    async uploadFile(filePath,fileOrginalName)
+    async renameDir(dirName, oldDirPath)
     {
-        let newFilePath = path.join(this.storagePath,fileOrginalName)
-        const check = await this.ifExists(newFilePath)
+        let newDirPath = path.join(this.storagePath.substring(0,this.storagePath.lastIndexOf("\\")), `${dirName}`);
+        if(newDirPath == oldDirPath)
+        {
+            return
+        }
+        const check = await this.ifExists(newDirPath)
         if(check)
         {
-            const basename = path.parse(newFilePath).name
-            const ext = path.extname(newFilePath)
-            fileOrginalName = basename + "_copy_" + Date.now().toString() + ext
-            newFilePath = path.join(this.storagePath,fileOrginalName)
+            dirName = dirName + "_copy_" + Date.now().toString()
+            newDirPath  = path.join(this.storagePath.substring(0,this.storagePath.lastIndexOf("\\")), `${dirName}`);
         }
         try
         {
-            await fsPromises.rename(filePath,newFilePath)
+            await fsPromises.rename(oldDirPath,newDirPath)
+            this.storagePath = newDirPath;
+            return true;
         }
         catch(ex)
         {
-            throw new Error(`Upload file error! (${ex})`)
+            throw new Error(`Save dir error! (${ex})`)
         }
     }
 
@@ -147,10 +152,22 @@ class FileManager
         return await fsPromises.lstat(dirFilePath)
         .then(res=>!res.isDirectory());
     }
+
+    static async tryAccess(path)
+    {
+        try
+        {
+            await fsPromises.access(path)
+            return true;
+        }
+        catch
+        {            
+            return false;
+        }
+    }
+
     
-
 }
-
 
 
 

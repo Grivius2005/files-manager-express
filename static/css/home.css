@@ -4,7 +4,7 @@
     flex-direction: column;
     justify-content: center;
     gap: 1em;
-    padding: 0.75em;
+    padding: 1em 0.75em;
 }
 
 .manager-control > .button
@@ -220,6 +220,17 @@
     gap: 25px;
 }
 
+
+.path-view
+{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 25px;
+    padding: 15px 25px;
+    background-color: #222;
+    border-bottom: 2px solid white;
+}
 
 
 

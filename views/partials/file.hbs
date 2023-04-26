@@ -1,5 +1,11 @@
 <a href="/getFile?path={{this}}">
     <div class="file">
+        <form method="POST" action="/downloadFile">
+            <input type="hidden" name="path" value="{{this}}">
+            <button type="submit" class="download">
+                <img src="gfx/download.png" alt="download">
+            </button>
+        </form>
         <div class="image">
             <img src="gfx/files_icons/{{getExtention this}}.png" alt="{{getFileName this}}">
         </div>
