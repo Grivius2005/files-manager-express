@@ -59,7 +59,7 @@ class FileManager
         }
         catch(ex)
         {
-            throw new Error(`Save file error! (${ex})`)
+            throw new Error(`Create file error! (${ex})`)
         }
     }
 
@@ -80,7 +80,7 @@ class FileManager
         }
         catch(ex)
         {
-            throw new Error(`Save dir error! (${ex})`)
+            throw new Error(`Create dir error! (${ex})`)
         }
     }
 
@@ -112,7 +112,7 @@ class FileManager
 
     async renameDir(dirName, oldDirPath)
     {
-        let newDirPath = path.join(this.storagePath.substring(0,this.storagePath.lastIndexOf("\\")), `${dirName}`);
+        let newDirPath = path.join(this.storagePath.replace(path.basename(this.storagePath),""), `${dirName}`);
         if(newDirPath == oldDirPath)
         {
             return
@@ -121,7 +121,7 @@ class FileManager
         if(check)
         {
             dirName = dirName + "_copy_" + Date.now().toString()
-            newDirPath  = path.join(this.storagePath.substring(0,this.storagePath.lastIndexOf("\\")), `${dirName}`);
+            newDirPath  = path.join(this.storagePath.replace(path.basename(this.storagePath),""), `${dirName}`);
         }
         try
         {
