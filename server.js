@@ -36,7 +36,6 @@ app.engine("hbs",hbs({
             return formats.includes(ext) ? ext : "default"
         },
         pathFormat: (dirPath)=>{
-            console.log(dirPath)
             const pathParts = dirPath.split("\\")
             pathParts.shift()
             const pathObjects = [
@@ -59,7 +58,9 @@ app.engine("hbs",hbs({
             }
             return pathObjects
         },
-        isInDir: (paths) => {return paths.length > 1}
+        isInDir: (dirPath) => {
+            return dirPath != "" && dirPath != "\\"
+        }
     }
 }))
 app.set("view engine","hbs")
