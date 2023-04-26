@@ -36,7 +36,9 @@ app.engine("hbs",hbs({
             return formats.includes(ext) ? ext : "default"
         },
         pathFormat: (dirPath)=>{
+            console.log(dirPath)
             const pathParts = dirPath.split("\\")
+            console.log(pathParts)
             pathParts.shift()
             const pathObjects = [
                 {
