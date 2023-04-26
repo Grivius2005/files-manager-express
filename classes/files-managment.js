@@ -12,7 +12,10 @@ class FileManager
 
     async getStorageData(baseStorePath)
     {
-        const res = await fsPromises.readdir(this.storagePath)
+        let res = await fsPromises.readdir(this.storagePath)
+        res = res.filter((file)=>{
+            return !(file[0] == ".")
+        })
         const pathsData = res.map((file)=>{
             const full =  path.join(this.storagePath,file)
             return full.replace(baseStorePath,"")
