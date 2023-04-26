@@ -78,22 +78,23 @@ app.get("/",(req,res)=>{
             }
             res.render("home.hbs",ctx)
         })
-        return
     }
-    if(req.query.path == "")
+    else if(req.query.path == "")
     {
         fManager.storagePath = baseStorePath
         res.redirect("/")
-        return
     }
-    const newPath = getFullPath(req.query.path)
-    FileManager.tryAccess(newPath).then((check)=>{
-        if(check)
-        {
-            fManager.storagePath = newPath
-        }
-        res.redirect("/")
-    })
+    else
+    {
+        const newPath = getFullPath(req.query.path)
+        FileManager.tryAccess(newPath).then((check)=>{
+            if(check)
+            {
+                fManager.storagePath = newPath
+            }
+            res.redirect("/")
+        })
+    }
 
 })
 
@@ -175,9 +176,12 @@ app.get("/getFile",(req,res)=>
     {
         const filePath = getFullPath(req.query.path)
         res.sendFile(filePath)
-        return
     }
-    res.redirect("/")
+    else
+    {
+        res.redirect("/")
+    }
+
 })
 
 app.post("/downloadFile",(req,res)=>
