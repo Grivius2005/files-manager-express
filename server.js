@@ -226,7 +226,7 @@ app.post("/renameDir",(req,res)=>{
     form.parse(req, (err,fields,files)=>{
         const dirname = fields.dirname
         const oldDirPath = getFullPath(fields.oldDirPath)
-        fManager.renameDir(dirname,oldDirPath)
+        fManager.renameDir(dirname,oldDirPath,baseStorePath)
         .then(()=>{
             res.redirect("/")
         })

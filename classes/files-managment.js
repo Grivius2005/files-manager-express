@@ -112,7 +112,7 @@ class FileManager
 
     async renameDir(dirName, oldDirPath)
     {
-        let newDirPath = path.join(this.storagePath.replace(path.basename(this.storagePath),""), `${dirName}`);
+        let newDirPath = path.join(oldDirPath.replace(path.basename(oldDirPath),""), `${dirName}`);
         if(newDirPath == oldDirPath)
         {
             return
@@ -121,7 +121,7 @@ class FileManager
         if(check)
         {
             dirName = dirName + "_copy_" + Date.now().toString()
-            newDirPath  = path.join(this.storagePath.replace(path.basename(this.storagePath),""), `${dirName}`);
+            newDirPath  = path.join(oldDirPath.replace(path.basename(oldDirPath),""), `${dirName}`);
         }
         try
         {
