@@ -107,6 +107,7 @@ app.post("/addTxtFile",(req,res)=>{
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const filename = fields.filename
+        fManager.storagePath = path.join(baseStorePath,fields.currentPath)
         fManager.createTxtFile(filename)
         .then(()=>{
             res.redirect("/")
@@ -124,6 +125,7 @@ app.post("/addDir",(req,res)=>{
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const dirname = fields.dirname
+        fManager.storagePath = path.join(baseStorePath,fields.currentPath)
         fManager.createDir(dirname)
         .then(()=>{
             res.redirect("/")
@@ -201,6 +203,11 @@ app.post("/upload",(req,res)=>
     form.uploadDir = fManager.storagePath
     form.keepExtensions = true
     form.multiples = true
+    form.on("field",(name, field)=>
+    {
+        fManager.storagePath = path.join(baseStorePath,field)
+        form.uploadDir = path.join(baseStorePath,field)
+    })
     form.on("fileBegin",async (name, file)=>{
         file.path = form.uploadDir + "/" + file.name;
         if(await fManager.ifExists(file.path))

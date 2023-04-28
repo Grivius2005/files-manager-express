@@ -27,6 +27,7 @@
                     <label for="uploadFiles" class="uploadBtn">
                         <img src="gfx/file-upload.png">
                     </label>
+                    <input type="hidden" name="currentPath" value="{{currentPath}}">
                     <input type="file" name="uploadFiles" id="uploadFiles" multiple="" required="">
                 </div>
                 <button type="submit" class="fold">&#10148;</button>
@@ -65,6 +66,7 @@
         <div class="form-inputs">
             <label for="filename">File name</label>
             <input type="text" name="filename" id="filename" required="">
+            <input type="hidden" name="currentPath" value="{{currentPath}}">
         </div>
 
         <div class="form-buttons">
@@ -81,6 +83,7 @@
         <div class="form-inputs">
             <label for="dirname">Directorie name</label>
             <input type="text" name="dirname" id="dirname" required="">
+            <input type="hidden" name="currentPath" value="{{currentPath}}">
         </div>
         <div class="form-buttons">
             <button type="submit">Create</button>
