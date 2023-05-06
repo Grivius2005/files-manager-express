@@ -219,14 +219,13 @@ app.post("/upload",(req,res)=>
         form.uploadDir = path.join(baseStorePath,field)
     })
     form.on("fileBegin", async (name, file)=>{
-        file.path = form.uploadDir + "/" + file.name;
-        const check = await fManager.ifExists(file.path)
-        if(check)
-        {
-            file.path = form.uploadDir + "/" + file.name.substring(0,file.name.lastIndexOf(".")) + "_copy_" + Date.now().toString() + path.extname(file.name)
-        }
-
+        file.path = form.uploadDir + "/" + file.name.substring(0,file.name.lastIndexOf(".")) + "_copy_" + Date.now().toString() + path.extname(file.name)
     })
+    form.on("file",async (name,file)=>{
+        fManager.uploadCheck(file.path)
+    })
+
+
     form.parse(req,(err, fields, files) => 
     {
         res.redirect(`/?path=${fields.currentPath}`)

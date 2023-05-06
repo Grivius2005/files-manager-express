@@ -107,8 +107,56 @@ class FileManager
         {
             throw new Error(`Delete directory error! (${ex})`)
         }
+    }
+
+    async uploadCheck(filePath)
+    {
+        let index = filePath.length - 1
+        while(filePath[index] != "\\" && filePath[index] != "/")
+        {
+            index-=1
+        }
+        const basePath = filePath.substring(0,index)
+        const baseName = path.basename(filePath)
+        const normalName = baseName.substring(0,baseName.indexOf("_copy_")) + path.extname(filePath)
+        this.renameFile(path.basename(normalName,path.extname(normalName)),filePath)
+    }
+
+
+    async renameFile(fileName,oldFilePath)
+    {
+        let index = oldFilePath.length - 1
+        while(oldFilePath[index] != "\\" && oldFilePath[index] != "/")
+        {
+            index-=1
+        }
+        const basePath = oldFilePath.substring(0,index)
+        let newFilePath = path.join(basePath,fileName + path.extname(oldFilePath))
+        if(newFilePath == oldFilePath)
+        {
+            return
+        }
+        const check = await this.ifExists(newFilePath)
+        if(check)
+        {
+            fileName = fileName + "_copy_" + Date.now().toString() + path.extname(oldFilePath)
+            newFilePath = path.join(basePath,fileName)
+        }
+        try
+        {
+            await fsPromises.rename(oldFilePath,newFilePath)
+            return true;
+        }
+        catch(ex)
+        {
+            throw new Error(`Rename file error! (${ex})`)
+        }
 
     }
+
+
+
+
 
     async renameDir(dirName, oldDirPath)
     {
