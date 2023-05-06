@@ -22,12 +22,11 @@
             </div>
             {{/if}}
 
-            <form class="upload" method="POST" action="/upload" enctype="multipart/form-data">
+            <form class="upload" method="POST" action="/upload?path={{currentPath}}" enctype="multipart/form-data">
                 <div class="content">
                     <label for="uploadFiles" class="uploadBtn">
                         <img src="gfx/file-upload.png">
                     </label>
-                    <input type="hidden" name="currentPath" value="{{currentPath}}">
                     <input type="file" name="uploadFiles" id="uploadFiles" multiple="" required="">
                 </div>
                 <button type="submit" class="fold">&#10148;</button>

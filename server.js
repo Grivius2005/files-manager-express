@@ -209,28 +209,35 @@ app.post("/downloadFile",(req,res)=>
 
 app.post("/upload",(req,res)=>
 {
-    let form = formidable({})
-    form.uploadDir = fManager.storagePath
-    form.keepExtensions = true
-    form.multiples = true
-    form.on("field",(name, field)=>
-    {
-        fManager.storagePath = path.join(baseStorePath,field)
-        form.uploadDir = path.join(baseStorePath,field)
+    const uploadPath = path.join(baseStorePath,req.query.path)
+    FileManager.tryAccess(uploadPath)
+    .then((check)=>{
+        if(!check)
+        {
+            res.redirect("/")
+            return
+        }
+        let form = formidable({})
+        form.uploadDir = uploadPath
+        form.keepExtensions = true
+        form.multiples = true
+        form.on("error",(err)=>{
+            res.redirect("/")
+        })
+        form.on("fileBegin", (name, file)=>{
+            file.path = form.uploadDir + "/" + file.name.substring(0,file.name.lastIndexOf(".")) + "_copy_" + Date.now().toString() + path.extname(file.name)
+        })
+        form.on("file",async (name,file)=>{
+            fManager.uploadCheck(file.path)
+            .catch((err)=>{
+                res.redirect("/")
+            })
+        })
+        form.parse(req,(err, fields, files) => 
+        {
+            res.redirect(`/?path=${req.query.path}`)
+        });
     })
-    form.on("fileBegin", async (name, file)=>{
-        file.path = form.uploadDir + "/" + file.name.substring(0,file.name.lastIndexOf(".")) + "_copy_" + Date.now().toString() + path.extname(file.name)
-    })
-    form.on("file",async (name,file)=>{
-        fManager.uploadCheck(file.path)
-    })
-
-
-    form.parse(req,(err, fields, files) => 
-    {
-        res.redirect(`/?path=${fields.currentPath}`)
-    });
-
 })
 
 app.post("/renameDir",(req,res)=>{
@@ -263,6 +270,5 @@ function getFullPath(part)
 {
     return path.join(baseStorePath,part)
 }
-
 
 

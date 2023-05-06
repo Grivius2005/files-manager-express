@@ -111,15 +111,17 @@ class FileManager
 
     async uploadCheck(filePath)
     {
-        let index = filePath.length - 1
-        while(filePath[index] != "\\" && filePath[index] != "/")
-        {
-            index-=1
-        }
-        const basePath = filePath.substring(0,index)
         const baseName = path.basename(filePath)
         const normalName = baseName.substring(0,baseName.indexOf("_copy_")) + path.extname(filePath)
-        this.renameFile(path.basename(normalName,path.extname(normalName)),filePath)
+        try
+        {
+            this.renameFile(path.basename(normalName,path.extname(normalName)),filePath)
+        }
+        catch(ex)
+        {
+            throw new Error(`Upload check file error! (${ex})`)
+        }
+ 
     }
 
 
