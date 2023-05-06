@@ -8,6 +8,7 @@
     </div>
         <form  method="POST" action="/delDir">
             <input type="hidden" name="path" value="{{this}}">
+            <input type="hidden" name="currentPath" value="{{@root.currentPath}}">
             <button type="submit" class="delete" onclick="return confirm('Are you sure you want to delete this?')">X</button>
         </form>
 </div>

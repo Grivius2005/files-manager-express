@@ -47,7 +47,7 @@ app.engine("hbs",hbs({
             for(let i=0;i<pathParts.length;i++)
             {
                 let newFullPath = ""
-                for(let j=i;j>=0;j--)
+                for(let j=0;j<i+1;j++)
                 {
                     newFullPath = path.join(newFullPath,pathParts[j])
                 }
@@ -60,7 +60,8 @@ app.engine("hbs",hbs({
         },
         isInDir: (dirPath) => {
             return dirPath != "" && dirPath != "\\" && dirPath != "/"
-        }
+        },
+        test: (a)=>{console.log(a)}
     }
 }))
 app.set("view engine","hbs")
@@ -69,8 +70,9 @@ app.use(express.json())
 
 
 app.get("/",(req,res)=>{
-    if(req.query.path == undefined)
+    if(req.query.path == undefined || req.query.path == "")
     {
+        fManager.storagePath = baseStorePath
         fManager.getStorageData(baseStorePath)
         .then((data)=>{
             const ctx = {
@@ -81,11 +83,6 @@ app.get("/",(req,res)=>{
             res.render("home.hbs",ctx)
         })
     }
-    else if(req.query.path == "")
-    {
-        fManager.storagePath = baseStorePath
-        res.redirect("/")
-    }
     else
     {
         const newPath = getFullPath(req.query.path)
@@ -94,12 +91,19 @@ app.get("/",(req,res)=>{
             {
                 fManager.storagePath = newPath
             }
-            res.redirect("/")
+            fManager.getStorageData(baseStorePath)
+            .then((data)=>{
+                const ctx = {
+                    title:"Home",
+                    storageData:data,
+                    currentPath:fManager.storagePath.replace(baseStorePath,"")
+                }
+                res.render("home.hbs",ctx)
+            })
         })
     }
 
 })
-
 
 
 
@@ -110,11 +114,11 @@ app.post("/addTxtFile",(req,res)=>{
         fManager.storagePath = path.join(baseStorePath,fields.currentPath)
         fManager.createTxtFile(filename)
         .then(()=>{
-            res.redirect("/")
+            res.redirect(`/?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect("/")
+            res.redirect(`/`)
         })
     })
 
@@ -128,11 +132,11 @@ app.post("/addDir",(req,res)=>{
         fManager.storagePath = path.join(baseStorePath,fields.currentPath)
         fManager.createDir(dirname)
         .then(()=>{
-            res.redirect("/")
+            res.redirect(`/?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect("/")
+            res.redirect(`/`)
         })
     })
 })
@@ -144,11 +148,11 @@ app.post("/delFile",(req,res)=>
         const filePath = getFullPath(fields.path)
         fManager.deleteFile(filePath)
         .then(()=>{
-            res.redirect("/")
+            res.redirect(`/?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect("/")
+            res.redirect(`/`)
         })
     })
 
@@ -163,11 +167,11 @@ app.post("/delDir",(req,res)=>
         const dirPath = getFullPath(fields.path)
         fManager.deleteDir(dirPath)
         .then(()=>{
-            res.redirect("/")
+            res.redirect(`/?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect("/")
+            res.redirect(`/`)
         })
     })
 
@@ -208,17 +212,20 @@ app.post("/upload",(req,res)=>
         fManager.storagePath = path.join(baseStorePath,field)
         form.uploadDir = path.join(baseStorePath,field)
     })
-    form.on("fileBegin",async (name, file)=>{
+    form.on("fileBegin", async (name, file)=>{
         file.path = form.uploadDir + "/" + file.name;
-        if(await fManager.ifExists(file.path))
+        const check = await fManager.ifExists(file.path)
+        if(check)
         {
             file.path = form.uploadDir + "/" + file.name.substring(0,file.name.lastIndexOf(".")) + "_copy_" + Date.now().toString() + path.extname(file.name)
         }
+
     })
     form.parse(req,(err, fields, files) => 
     {
-        res.redirect("/")
+        res.redirect(`/?path=${fields.currentPath}`)
     });
+
 })
 
 app.post("/renameDir",(req,res)=>{
@@ -227,8 +234,8 @@ app.post("/renameDir",(req,res)=>{
         const dirname = fields.dirname
         const oldDirPath = getFullPath(fields.oldDirPath)
         fManager.renameDir(dirname,oldDirPath,baseStorePath)
-        .then(()=>{
-            res.redirect("/")
+        .then((newDirPath)=>{
+            res.redirect(`/?path=${newDirPath.replace(baseStorePath,"")}`)
         })
         .catch((err)=>{
             console.log(err)

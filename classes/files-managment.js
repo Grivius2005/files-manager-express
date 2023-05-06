@@ -112,7 +112,13 @@ class FileManager
 
     async renameDir(dirName, oldDirPath)
     {
-        let newDirPath = path.join(oldDirPath.replace(path.basename(oldDirPath),""), `${dirName}`);
+        let index = oldDirPath.length - 1
+        while(oldDirPath[index] != "\\" && oldDirPath[index] != "/")
+        {
+            index-=1
+        }
+        const basePath = oldDirPath.substring(0,index)
+        let newDirPath = path.join(basePath,dirName)
         if(newDirPath == oldDirPath)
         {
             return
@@ -121,17 +127,17 @@ class FileManager
         if(check)
         {
             dirName = dirName + "_copy_" + Date.now().toString()
-            newDirPath  = path.join(oldDirPath.replace(path.basename(oldDirPath),""), `${dirName}`);
+            newDirPath = path.join(basePath,dirName)
         }
         try
         {
             await fsPromises.rename(oldDirPath,newDirPath)
             this.storagePath = newDirPath;
-            return true;
+            return newDirPath;
         }
         catch(ex)
         {
-            throw new Error(`Save dir error! (${ex})`)
+            throw new Error(`Rename dir error! (${ex})`)
         }
     }
 
