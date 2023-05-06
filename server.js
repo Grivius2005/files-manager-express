@@ -86,10 +86,16 @@ app.get("/",(req,res)=>{
     else
     {
         const newPath = getFullPath(req.query.path)
-        FileManager.tryAccess(newPath).then((check)=>{
+        FileManager.tryAccess(newPath)
+        .then((check)=>{
             if(check)
             {
                 fManager.storagePath = newPath
+            }
+            else
+            {
+                res.redirect("/")
+                return
             }
             fManager.getStorageData(baseStorePath)
             .then((data)=>{
