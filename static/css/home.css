@@ -152,6 +152,8 @@
 
 
 
+
+
 .home-dialogs > .content
 {
     display: flex;
@@ -159,14 +161,19 @@
     justify-content: center;
     align-items: center;
     gap:1em;
-    width: 40%;
-    height: 40%;
+    width: 50%;
+    height: 50%;
     background: linear-gradient(90deg,var(--purple-one),var(--purple-two));
     border-radius: 15px;
     font-size: 2em;
     padding: 2em;
     overflow: hidden;
     color: white;
+}
+
+.home-dialogs > .content h2
+{
+    text-align: center;
 }
 
 .home-dialogs > .content > .form-inputs
