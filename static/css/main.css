@@ -22,6 +22,52 @@ aside
     background-color: var(--aside-color);
 }
 
+.manager-control
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+    padding: 1em 0.75em;
+}
+
+.manager-control > .button
+{
+    display: flex;
+    width: 100%;
+    height: 3em;
+    background: linear-gradient(0,var(--purple-two),var(--purple-three));
+    box-shadow: 0px 0px 5px 1px black;
+    border-radius: 10px;
+    transition: 0.5s;
+}
+
+.manager-control > .button > .content
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    height: 100%;
+    border-radius: 10px;
+    color: white;
+}
+
+.manager-control > .button > .fold
+{
+    width: 15%;
+    height: 100%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: linear-gradient(0,var(--lime-two),var(--lime-three));
+}
+
+.manager-control > .button:hover
+{
+    transform: scale(105%);
+    cursor: pointer;
+}
+
 
 @media only screen and (max-width:650px){
     main
@@ -39,5 +85,10 @@ aside
         height: 100%;
         width: 100%;
         overflow: auto;
+    }
+
+    .manager-control > .button
+    {
+        height: 2em;
     }
 }

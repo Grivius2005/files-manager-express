@@ -9,7 +9,7 @@
             </div>
             <div class="button" onclick="switchTxtFileDialog()">
                 <div class="content">
-                    <p>Add txt file</p>
+                    <p>Add file</p>
                 </div>
                 <div class="fold"></div>
             </div>
@@ -60,11 +60,22 @@
 
 
 <dialog id="fileDialog" class="home-dialogs">
-    <form method="post" action="/addTxtFile" class="content">
-        <h2>Txt File</h2>
+    <form method="post" action="/addFile" class="content">
+        <h2>File</h2>
         <div class="form-inputs">
-            <label for="filename">File name</label>
-            <input type="text" name="filename" id="filename" required="">
+            <label for="filename">File name and extention</label>
+            <div class="input-group">
+                <input type="text" name="filename" id="filename" required="">
+                <select name="ext" id="ext" required="">
+                    <option value="txt" selected="">txt</option>
+                    <option value="xml">xml</option>
+                    <option value="html">html</option>
+                    <option value="css">css</option>
+                    <option value="js">js</option>
+                    <option value="json">json</option>
+                </select>
+            </div>
+
             <input type="hidden" name="currentPath" value="{{currentPath}}">
         </div>
 

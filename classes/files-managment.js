@@ -43,18 +43,19 @@ class FileManager
     }
 
 
-    async createTxtFile(fileName)
+    async createFile(fileName,ext)
     {
-        let filePath = path.join(this.storagePath, `${fileName}.txt`);
+        let filePath = path.join(this.storagePath, `${fileName}.${ext}`);
         const check = await this.ifExists(filePath)
         if(check)
         {
             fileName = fileName + "_copy_" + Date.now().toString()
-            filePath = path.join(this.storagePath, `${fileName}.txt`);
+            filePath = path.join(this.storagePath, `${fileName}.${ext}`);
         }
         try
         {
-            await fsPromises.writeFile(filePath,"");
+            const text = await fsPromises.readFile(path.join(__dirname,"default-texts",`default.${ext}`))
+            await fsPromises.writeFile(filePath,text);
             return true;
         }
         catch(ex)
@@ -171,7 +172,7 @@ class FileManager
         let newDirPath = path.join(basePath,dirName)
         if(newDirPath == oldDirPath)
         {
-            return
+            return oldDirPath
         }
         const check = await this.ifExists(newDirPath)
         if(check)

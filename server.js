@@ -33,7 +33,7 @@ app.engine("hbs",hbs({
         },
         getExtention: (filePath)=>{
             const ext = (path.extname(filePath)).replace(".","").toLowerCase();
-            return formats.includes(ext) ? ext : "default"
+            return formats.all.includes(ext) ? ext : "default"
         },
         pathFormat: (dirPath)=>{
             let pathParts = dirPath.includes("/") ? dirPath.split("/") : dirPath.split("\\")
@@ -61,7 +61,9 @@ app.engine("hbs",hbs({
         isInDir: (dirPath) => {
             return dirPath != "" && dirPath != "\\" && dirPath != "/"
         },
-        test: (a)=>{console.log(a)}
+        isEditable:(filePath)=>{
+            return false /*formats.editable.includes(path.extname(filePath).replace(".","").toLowerCase())*/
+        }
     }
 }))
 app.set("view engine","hbs")
@@ -113,12 +115,13 @@ app.get("/",(req,res)=>{
 
 
 
-app.post("/addTxtFile",(req,res)=>{
+app.post("/addFile",(req,res)=>{
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const filename = fields.filename
+        const ext = fields.ext
         fManager.storagePath = path.join(baseStorePath,fields.currentPath)
-        fManager.createTxtFile(filename)
+        fManager.createFile(filename,ext)
         .then(()=>{
             res.redirect(`/?path=${fields.currentPath}`)
         })
@@ -254,6 +257,14 @@ app.post("/renameDir",(req,res)=>{
             res.redirect("/")
         })
     })
+})
+
+app.get("/editor",(req,res)=>
+{
+    const ctx = {
+        title:"Editor",
+    }
+    res.render("editor.hbs",ctx)
 })
 
 

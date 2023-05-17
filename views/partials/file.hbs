@@ -1,4 +1,10 @@
-<a href="/getFile?path={{this}}">
+
+{{#if (isEditable this)}}
+    <a href="/editor?path={{this}}">
+{{else}}
+    <a href="/getFile?path={{this}}">
+{{/if}}
+
     <div class="file">
         <form method="POST" action="/downloadFile">
             <input type="hidden" name="path" value="{{this}}">
