@@ -48,7 +48,13 @@ async function  saveFile(filePath)
     }
 
     await fetch("/editor",options)
-    .then(()=>{
+    .then((res)=>res.text())
+    .then(data=>{
+        if(data != "")
+        {
+            alert("Save file error! (Probably file doesn't exist anymore)")
+            window.location.replace("/")
+        }
         alert("File was saved")
         return true
     })

@@ -304,14 +304,15 @@ app.get("/editor",(req,res)=>
 })
 
 app.post("/editor",(req,res)=>{
+    res.setHeader("Content-Type","text/plain")
     const {newContent,filePath} = req.body
     FileManager.saveFile(newContent,getFullPath(filePath))
     .then(()=>{
-        res.send()
+        res.send("")
     })
     .catch((err)=>{
         console.log(err)
-        res.emit("error",err)
+        res.send(err.toString())
     })
 })
 
