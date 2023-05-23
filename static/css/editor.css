@@ -1,3 +1,5 @@
+
+
 .filename-view
 {
     display: flex;
@@ -8,7 +10,6 @@
     background-color: #222;
     border-bottom: 2px solid white;
 }
-
 
 
 .editor

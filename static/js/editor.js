@@ -3,7 +3,18 @@ const lineCounter = document.getElementById("line-counter")
 
 
 textContent.addEventListener("input",lineCount)
-
+textContent.onkeydown = function(e){
+    if (e.keyCode === 9) 
+    {
+        this.setRangeText(
+            '    ',
+            this.selectionStart,
+            this.selectionStart,
+            'end'
+        )
+        return false; 
+    }
+}   
 
 
 function lineCount()
