@@ -79,3 +79,21 @@
     cursor: pointer;
     transform: scale(105%);
 }
+
+.check-label
+{
+    font-size: 15px;
+}
+
+#extSwitch
+{
+    width: 15px;
+    height: 15px;
+}
+
+#extInfo
+{
+    display: none;
+    font-size: 15px;
+    color: red;
+}

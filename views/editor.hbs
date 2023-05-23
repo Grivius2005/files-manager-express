@@ -1,7 +1,7 @@
 <main>
     <aside>
         <div class="manager-control">
-            <div class="button">
+            <div class="button" onclick="switchFileRenameDialog()">
                <div class="content">
                     <p>Rename file</p>
                 </div>
@@ -13,15 +13,21 @@
                 </div>
                 <div class="fold"></div>
             </a>
+            <a href="/?path={{getDirPath filePath}}" class="button" >
+                <div class="content">
+                    <p>Return</p>
+                </div>
+                <div class="fold"></div>
+            </a>
         </div>
     </aside>
     <div id="main-content">
-        <div class="filename-view">/{{getFileName filePath}}</div>
+        <div class="filename-view">{{filePath}}</div>
         <div class="editor">
             <div id="line-counter">
                 <p>1</p>
             </div>
-            <textarea name="text-content" id="text-content" spellcheck="false">{{fileContent}}</textarea>
+            <textarea name="text-content" id="text-content" oninput="lineCount()" spellcheck="false">{{fileContent}}</textarea>
         </div>
         <button type="button" class="save-btn" onclick="return saveFile('{{safeFileFormat filePath}}')">Save current state</button>
     </div> 
@@ -29,33 +35,33 @@
 
 
 <dialog id="fileRenameDialog" class="dialogs">
-    <form method="post" action="/addFile" class="content">
-        <h2>File</h2>
+    <form method="post" action="/renameFile" class="content">
+        <h2>Rename File</h2>
         <div class="form-inputs">
-            <label for="filename">File name and extention</label>
+            <label for="filename">Rename file &#40;And extension&#41;</label>
             <div class="input-group">
-                <input type="text" name="filename" id="filename" required="">
+                <input type="text" name="filename" id="filename" value="{{getFileNameForInput filePath}}" required="">
+                <input type="hidden" name="defaultExt" value="{{getExtension filePath}}">
                 <select name="ext" id="ext" required="">
-                    <option value="txt" selected="">txt</option>
-                    <option value="xml">xml</option>
-                    <option value="html">html</option>
-                    <option value="css">css</option>
-                    <option value="js">js</option>
-                    <option value="json">json</option>
+                    {{#each editableExt}}
+                        {{#if (isEqual this (getExtension ../filePath))}}
+                            <option value="{{this}}" selected="">{{this}}</option>
+                        {{else}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/if}}
+                    {{/each}}
                 </select>
             </div>
-
-            <input type="hidden" name="currentPath" value="{{currentPath}}">
+            <label for="extSwitch" class="check-label">Enable ext change: <input type="checkbox" id="extSwitch" onchange="extCheck('{{getExtension filePath}}')"></label>
+            <p id="extInfo">Changing extension can cause problems</p>
+            <input type="hidden" name="oldFilePath" value="{{filePath}}">
         </div>
-
         <div class="form-buttons">
             <button type="submit">Create</button>
-            <button type="button" onclick="switchTxtFileDialog()">Cancel</button>
+            <button type="button" onclick="switchFileRenameDialog()">Cancel</button>
         </div>
     </form>
 </dialog>
-
-
 
 
 

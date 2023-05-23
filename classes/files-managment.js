@@ -146,7 +146,7 @@ class FileManager
         const normalName = baseName.substring(0,baseName.indexOf("_copy_")) + path.extname(filePath)
         try
         {
-            FileManager.renameFile(path.basename(normalName,path.extname(normalName)),filePath)
+            FileManager.renameFile(path.basename(normalName,path.extname(normalName)),path.extname(normalName),filePath)
         }
         catch(ex)
         {
@@ -192,7 +192,7 @@ class FileManager
         }
     }
 
-    static async renameFile(fileName,oldFilePath)
+    static async renameFile(fileName,newExt,oldFilePath)
     {
         let index = oldFilePath.length - 1
         while(oldFilePath[index] != "\\" && oldFilePath[index] != "/")
@@ -200,7 +200,7 @@ class FileManager
             index-=1
         }
         const basePath = oldFilePath.substring(0,index)
-        let newFilePath = path.join(basePath,fileName + path.extname(oldFilePath))
+        let newFilePath = path.join(basePath,fileName + "." + newExt)
         if(newFilePath == oldFilePath)
         {
             return
@@ -208,13 +208,13 @@ class FileManager
         const check = await FileManager.ifExists(newFilePath)
         if(check)
         {
-            fileName = fileName + "_copy_" + Date.now().toString() + path.extname(oldFilePath)
+            fileName = fileName + "_copy_" + Date.now().toString() + "." + newExt
             newFilePath = path.join(basePath,fileName)
         }
         try
         {
             await fsPromises.rename(oldFilePath,newFilePath)
-            return true;
+            return newFilePath;
         }
         catch(ex)
         {

@@ -15,6 +15,9 @@ app.engine("hbs",hbs({
     extname: '.hbs',
     partialsDir: "views/partials",
     helpers: {
+        isEqual:(a,b)=>{
+            return a==b
+        },
         getFileName: (filePath)=>{
             let name = path.basename(filePath);
             if(name.substring(0,name.lastIndexOf(".")).length > 12)
@@ -22,6 +25,9 @@ app.engine("hbs",hbs({
                 name = name.substring(0,12) + "[...]" + path.extname(filePath)
             }
             return name;
+        },
+        getFileNameForInput:(filePath)=>{
+            return path.parse(filePath).name;
         },
         getDirName: (dirPath)=>{
             let name = path.basename(dirPath);
@@ -31,9 +37,17 @@ app.engine("hbs",hbs({
             }
             return name;
         },
-        getExtention: (filePath)=>{
+        getExtension: (filePath)=>{
             const ext = (path.extname(filePath)).replace(".","").toLowerCase();
             return formats.all.includes(ext) ? ext : "default"
+        },
+        getDirPath:(filePath)=>{
+            let index = filePath.length - 1
+            while(filePath[index] != "\\" && filePath[index] != "/")
+            {
+                index-=1
+            }
+            return filePath.substring(0,index)
         },
         pathFormat: (dirPath)=>{
             let pathParts = dirPath.includes("/") ? dirPath.split("/") : dirPath.split("\\")
@@ -83,7 +97,8 @@ app.get("/",(req,res)=>{
             const ctx = {
                 title:"Home",
                 storageData:data,
-                currentPath:fManager.storagePath.replace(baseStorePath,"")
+                currentPath:fManager.storagePath.replace(baseStorePath,""),
+                editableExt:formats.editable
             }
             res.render("home.hbs",ctx)
         })
@@ -107,7 +122,8 @@ app.get("/",(req,res)=>{
                 const ctx = {
                     title:"Home",
                     storageData:data,
-                    currentPath:fManager.storagePath.replace(baseStorePath,"")
+                    currentPath:fManager.storagePath.replace(baseStorePath,""),
+                    editableExt:formats.editable
                 }
                 res.render("home.hbs",ctx)
             })
@@ -266,10 +282,11 @@ app.post("/renameFile",(req,res)=>{
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const filename = fields.filename
+        const ext = fields.ext === undefined ? fields.defaultExt : fields.ext
         const oldFilePath = getFullPath(fields.oldFilePath)
-        FileManager.renameFile(filename,oldFilePath)
+        FileManager.renameFile(filename,ext,oldFilePath)
         .then((newFilePath)=>{
-            res.redirect(`/?path=${newFilePath.replace(baseStorePath,"")}`)
+            res.redirect(`/editor?path=${newFilePath.replace(baseStorePath,"")}`)
         })
         .catch((err)=>{
             console.log(err)
@@ -288,7 +305,8 @@ app.get("/editor",(req,res)=>
             const ctx = {
                 title:"Editor",
                 filePath:req.query.path,
-                fileContent:data
+                fileContent:data,
+                editableExt:formats.editable
             }
             res.render("editor.hbs",ctx)
         })

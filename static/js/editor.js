@@ -1,8 +1,11 @@
 const textContent = document.getElementById("text-content")
 const lineCounter = document.getElementById("line-counter")
+const fileRenameDialog = document.getElementById("fileRenameDialog")
+const extSelect = document.getElementById("ext")
+const extSwitch = document.getElementById("extSwitch")
+const extInfo = document.getElementById("extInfo")
 
 
-textContent.addEventListener("input",lineCount)
 textContent.onkeydown = function(e){
     if (e.keyCode === 9) 
     {
@@ -15,6 +18,20 @@ textContent.onkeydown = function(e){
         return false; 
     }
 }   
+
+extSelect.disabled = true
+extInfo.style.display = "none"
+extSwitch.checked = false
+
+
+function extCheck(defualtExt){
+    extInfo.style.display = extSwitch.checked ? "block":"none"
+    extSelect.disabled = !extSwitch.checked
+    if(!extSwitch.checked)
+    {
+        extSelect.value = defualtExt
+    }
+}
 
 
 function lineCount()
@@ -33,6 +50,21 @@ function lineCount()
     }
     textContent.rows = count
 }
+
+function switchFileRenameDialog()
+{
+    if(!fileRenameDialog.open)
+    {
+        document.body.style.filter = "brightness(0.5)"
+        fileRenameDialog.showModal();
+    } 
+    else 
+    {
+        document.body.style.filter = ""
+        fileRenameDialog.close();
+    }
+}
+
 
 async function  saveFile(filePath)
 {
