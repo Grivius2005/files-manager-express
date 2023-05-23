@@ -63,6 +63,9 @@ app.engine("hbs",hbs({
         },
         isEditable:(filePath)=>{
             return formats.editable.includes(path.extname(filePath).replace(".","").toLowerCase())
+        },
+        safeFileFormat:(filePath)=>{
+            return filePath.split("").map((char)=>char == "\\" ? "\\\\" : char).join("")
         }
     }
 }))

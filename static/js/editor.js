@@ -25,7 +25,6 @@ function lineCount()
 
 async function  saveFile(filePath)
 {
-
     const options = {
         method:"POST",
         headers:{
@@ -36,7 +35,6 @@ async function  saveFile(filePath)
             filePath:filePath
         })
     }
-    console.log(options.body)
 
     await fetch("/editor",options)
     .then(()=>{
