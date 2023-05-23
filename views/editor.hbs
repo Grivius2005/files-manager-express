@@ -22,7 +22,11 @@
         </div>
     </aside>
     <div id="main-content">
-        <div class="filename-view">{{filePath}}</div>
+        <div class="filename-view">
+            {{#each (pathFormat filePath)}}
+                /{{this.short}}
+            {{/each}}
+        </div>
         <div class="editor">
             <div id="line-counter">
                 <p>1</p>

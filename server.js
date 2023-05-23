@@ -49,8 +49,8 @@ app.engine("hbs",hbs({
             }
             return filePath.substring(0,index)
         },
-        pathFormat: (dirPath)=>{
-            let pathParts = dirPath.includes("/") ? dirPath.split("/") : dirPath.split("\\")
+        pathFormat: (fileDirPath)=>{
+            let pathParts = fileDirPath.includes("/") ? fileDirPath.split("/") : fileDirPath.split("\\")
             pathParts = pathParts.filter((part=>part))
             const pathObjects = [
                 {
@@ -67,7 +67,7 @@ app.engine("hbs",hbs({
                 }
                 pathObjects.push({
                     full:newFullPath,
-                    short:pathParts[i]
+                    short: pathParts[i].length > 12 ? pathParts[i].substring(0,12) + "[...]" : pathParts[i]
                 })
             }
             return pathObjects
