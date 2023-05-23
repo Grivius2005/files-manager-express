@@ -11,10 +11,47 @@
 
     </aside>
     <div id="main-content">
-        <form>
-            <div class="line-counter"></div>
-            <textarea name="text-content" id="text-content"></textarea>
-            <button type="button">Save current state</button>
-        </form>
+        <div class="filename-view">/{{getFileName filePath}}</div>
+        <div class="editor">
+            <div id="line-counter">
+                <p>1</p>
+            </div>
+            <textarea name="text-content" id="text-content" spellcheck="false">{{fileContent}}</textarea>
+        </div>
+        <button type="button" class="save-btn" onclick="return saveFile('{{filePath}}')">Save current state</button>
     </div> 
 </main>
+
+
+<dialog id="fileRenameDialog" class="dialogs">
+    <form method="post" action="/addFile" class="content">
+        <h2>File</h2>
+        <div class="form-inputs">
+            <label for="filename">File name and extention</label>
+            <div class="input-group">
+                <input type="text" name="filename" id="filename" required="">
+                <select name="ext" id="ext" required="">
+                    <option value="txt" selected="">txt</option>
+                    <option value="xml">xml</option>
+                    <option value="html">html</option>
+                    <option value="css">css</option>
+                    <option value="js">js</option>
+                    <option value="json">json</option>
+                </select>
+            </div>
+
+            <input type="hidden" name="currentPath" value="{{currentPath}}">
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit">Create</button>
+            <button type="button" onclick="switchTxtFileDialog()">Cancel</button>
+        </div>
+    </form>
+</dialog>
+
+
+
+
+
+<script src="js/editor.js"></script>

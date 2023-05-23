@@ -46,7 +46,7 @@ class FileManager
     async createFile(fileName,ext)
     {
         let filePath = path.join(this.storagePath, `${fileName}.${ext}`);
-        const check = await this.ifExists(filePath)
+        const check = await FileManager.ifExists(filePath)
         if(check)
         {
             fileName = fileName + "_copy_" + Date.now().toString()
@@ -54,8 +54,8 @@ class FileManager
         }
         try
         {
-            const text = await fsPromises.readFile(path.join(__dirname,"default-texts",`default.${ext}`))
-            await fsPromises.writeFile(filePath,text);
+            const text = await FileManager.readFile(path.join(__dirname,"default-texts",`default.${ext}`))
+            await fsPromises.writeFile(filePath,text)
             return true;
         }
         catch(ex)
@@ -68,7 +68,7 @@ class FileManager
     async createDir(dirName)
     {
         let dirPath = path.join(this.storagePath, `${dirName}`);
-        const check = await this.ifExists(dirPath)
+        const check = await FileManager.ifExists(dirPath)
         if(check)
         {
             dirName = dirName + "_copy_" + Date.now().toString()
@@ -85,7 +85,38 @@ class FileManager
         }
     }
 
-    async deleteFile(filePath)
+    async renameDir(dirName, oldDirPath)
+    {
+        let index = oldDirPath.length - 1
+        while(oldDirPath[index] != "\\" && oldDirPath[index] != "/")
+        {
+            index-=1
+        }
+        const basePath = oldDirPath.substring(0,index)
+        let newDirPath = path.join(basePath,dirName)
+        if(newDirPath == oldDirPath)
+        {
+            return
+        }
+        const check = await FileManager.ifExists(newDirPath)
+        if(check)
+        {
+            dirName = dirName + "_copy_" + Date.now().toString()
+            newDirPath = path.join(basePath,dirName)
+        }
+        try
+        {
+            await fsPromises.rename(oldDirPath,newDirPath)
+            this.storagePath = newDirPath;
+            return newDirPath;
+        }
+        catch(ex)
+        {
+            throw new Error(`Rename dir error! (${ex})`)
+        }
+    }
+
+    static async  deleteFile(filePath)
     {
         try
         {
@@ -93,12 +124,11 @@ class FileManager
         }
         catch(ex)
         {
-            throw new Error(`Delete directory error! (${ex})`)
+            throw new Error(`Delete file error! (${ex})`)
         }
     }
 
-
-    async deleteDir(dirPath)
+    static async deleteDir(dirPath)
     {
         try
         {
@@ -110,13 +140,13 @@ class FileManager
         }
     }
 
-    async uploadCheck(filePath)
+    static async uploadCheck(filePath)
     {
         const baseName = path.basename(filePath)
         const normalName = baseName.substring(0,baseName.indexOf("_copy_")) + path.extname(filePath)
         try
         {
-            this.renameFile(path.basename(normalName,path.extname(normalName)),filePath)
+            FileManager.renameFile(path.basename(normalName,path.extname(normalName)),filePath)
         }
         catch(ex)
         {
@@ -125,8 +155,44 @@ class FileManager
  
     }
 
+    static async readFile(filePath)
+    {
+        if(!(await FileManager.ifExists(filePath)))
+        {
+            throw new Error(`Read file error! (No file on url: ${filePath})`)
+        }
+        try
+        {
+            return await fsPromises.readFile(filePath)
+        }
+        catch
+        {
+            throw new Error(`Read file error! (${ex})`)
+        }
 
-    async renameFile(fileName,oldFilePath)
+    }
+
+    static async saveFile(content,filePath)
+    {
+        if(!(await FileManager.ifExists(filePath)))
+        {
+            throw new Error(`Save file error! (No file on url: ${filePath})`)
+        }
+        else
+        {
+            const text = await FileManager.readFile(filePath)
+        }
+        try
+        {
+            await fsPromises.writeFile(filePath,content)
+        }
+        catch
+        {
+            throw new Error(`Save file error! (${ex})`)
+        }
+    }
+
+    static async renameFile(fileName,oldFilePath)
     {
         let index = oldFilePath.length - 1
         while(oldFilePath[index] != "\\" && oldFilePath[index] != "/")
@@ -139,7 +205,7 @@ class FileManager
         {
             return
         }
-        const check = await this.ifExists(newFilePath)
+        const check = await FileManager.ifExists(newFilePath)
         if(check)
         {
             fileName = fileName + "_copy_" + Date.now().toString() + path.extname(oldFilePath)
@@ -158,43 +224,7 @@ class FileManager
     }
 
 
-
-
-
-    async renameDir(dirName, oldDirPath)
-    {
-        let index = oldDirPath.length - 1
-        while(oldDirPath[index] != "\\" && oldDirPath[index] != "/")
-        {
-            index-=1
-        }
-        const basePath = oldDirPath.substring(0,index)
-        let newDirPath = path.join(basePath,dirName)
-        if(newDirPath == oldDirPath)
-        {
-            return oldDirPath
-        }
-        const check = await this.ifExists(newDirPath)
-        if(check)
-        {
-            dirName = dirName + "_copy_" + Date.now().toString()
-            newDirPath = path.join(basePath,dirName)
-        }
-        try
-        {
-            await fsPromises.rename(oldDirPath,newDirPath)
-            this.storagePath = newDirPath;
-            return newDirPath;
-        }
-        catch(ex)
-        {
-            throw new Error(`Rename dir error! (${ex})`)
-        }
-    }
-
-
-
-    async ifExists(dirFilePath)
+    static async ifExists(dirFilePath)
     {
         try
         {
@@ -206,6 +236,8 @@ class FileManager
             return false;
         }
     }
+
+
 
     static async isFile(dirFilePath)
     {

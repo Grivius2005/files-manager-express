@@ -62,7 +62,7 @@ app.engine("hbs",hbs({
             return dirPath != "" && dirPath != "\\" && dirPath != "/"
         },
         isEditable:(filePath)=>{
-            return false /*formats.editable.includes(path.extname(filePath).replace(".","").toLowerCase())*/
+            return formats.editable.includes(path.extname(filePath).replace(".","").toLowerCase())
         }
     }
 }))
@@ -155,7 +155,7 @@ app.post("/delFile",(req,res)=>
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const filePath = getFullPath(fields.path)
-        fManager.deleteFile(filePath)
+        FileManager.deleteFile(filePath)
         .then(()=>{
             res.redirect(`/?path=${fields.currentPath}`)
         })
@@ -174,7 +174,7 @@ app.post("/delDir",(req,res)=>
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const dirPath = getFullPath(fields.path)
-        fManager.deleteDir(dirPath)
+        FileManager.deleteDir(dirPath)
         .then(()=>{
             res.redirect(`/?path=${fields.currentPath}`)
         })
@@ -231,7 +231,7 @@ app.post("/upload",(req,res)=>
             file.path = form.uploadDir + "/" + file.name.substring(0,file.name.lastIndexOf(".")) + "_copy_" + Date.now().toString() + path.extname(file.name)
         })
         form.on("file",async (name,file)=>{
-            fManager.uploadCheck(file.path)
+            FileManager.uploadCheck(file.path)
             .catch((err)=>{
                 res.redirect("/")
             })
@@ -248,7 +248,7 @@ app.post("/renameDir",(req,res)=>{
     form.parse(req, (err,fields,files)=>{
         const dirname = fields.dirname
         const oldDirPath = getFullPath(fields.oldDirPath)
-        fManager.renameDir(dirname,oldDirPath,baseStorePath)
+        fManager.renameDir(dirname,oldDirPath)
         .then((newDirPath)=>{
             res.redirect(`/?path=${newDirPath.replace(baseStorePath,"")}`)
         })
@@ -259,12 +259,57 @@ app.post("/renameDir",(req,res)=>{
     })
 })
 
+app.post("/renameFile",(req,res)=>{
+    let form = formidable({})
+    form.parse(req, (err,fields,files)=>{
+        const filename = fields.filename
+        const oldFilePath = getFullPath(fields.oldFilePath)
+        FileManager.renameFile(filename,oldFilePath)
+        .then((newFilePath)=>{
+            res.redirect(`/?path=${newFilePath.replace(baseStorePath,"")}`)
+        })
+        .catch((err)=>{
+            console.log(err)
+            res.redirect("/")
+        })
+    })
+})
+
 app.get("/editor",(req,res)=>
 {
-    const ctx = {
-        title:"Editor",
+    if(req.query.path != undefined)
+    {
+        const filePath = getFullPath(req.query.path)
+        FileManager.readFile(filePath)
+        .then((data)=>{
+            const ctx = {
+                title:"Editor",
+                filePath:req.query.path,
+                fileContent:data
+            }
+            res.render("editor.hbs",ctx)
+        })
+        .catch((err)=>{
+            console.log(err)
+            res.redirect("/")
+        })
     }
-    res.render("editor.hbs",ctx)
+    else
+    {
+        res.redirect("/")
+    }
+})
+
+app.post("/editor",(req,res)=>{
+    const {newContent,filePath} = req.body
+    FileManager.saveFile(newContent,getFullPath(filePath))
+    .then(()=>{
+        res.send()
+    })
+    .catch((err)=>{
+        console.log(err)
+        res.emit("error",err)
+    })
 })
 
 
