@@ -1,18 +1,18 @@
 <main>
     <aside>
         <div class="manager-control">
-            <div class="button" onclick="switchFileRenameDialog()">
-               <div class="content">
-                    <p>Rename file</p>
-                </div>
-                <div class="fold"></div>
-            </div>
             <a href="/getFile?path={{filePath}}" class="button" >
                 <div class="content">
                     <p>Show file</p>
                 </div>
                 <div class="fold"></div>
             </a>
+            <div class="button" onclick="switchFileRenameDialog()">
+               <div class="content">
+                    <p>Rename file</p>
+                </div>
+                <div class="fold"></div>
+            </div>
             <a href="/?path={{getDirPath filePath}}" class="button" >
                 <div class="content">
                     <p>Return</p>
