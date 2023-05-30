@@ -50,6 +50,8 @@ aside
     align-items: center;
     width: 85%;
     height: 100%;
+    font-size: 15px;
+    font-family: inherit;
     border-radius: 10px;
     color: white;
 }

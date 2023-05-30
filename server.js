@@ -4,10 +4,19 @@ const hbs = require("express-handlebars")
 const path = require("path")
 const PORT = process.env.PORT || 3000
 const formats = require("./data/formats.json")
+const colorPalettes = require("./data/color-palettes.json")
 const baseStorePath = path.join(__dirname,"upload")
 const FileManager = require("./classes/files-managment")
 const fManager = new FileManager(baseStorePath)
 const formidable = require("formidable")
+
+let editorStyling = {
+    fontSize:15,
+    colorPalettes:colorPalettes[0],
+    colorPalettesIndex:0
+}
+
+
 
 app.set("views",path.join(__dirname,"views"))
 app.engine("hbs",hbs({
@@ -49,8 +58,8 @@ app.engine("hbs",hbs({
             }
             return filePath.substring(0,index)
         },
-        pathFormat: (fileDirPath)=>{
-            let pathParts = fileDirPath.includes("/") ? fileDirPath.split("/") : fileDirPath.split("\\")
+        pathDirFormat: (dirPath)=>{
+            let pathParts = dirPath.includes("/") ? dirPath.split("/") : dirPath.split("\\")
             pathParts = pathParts.filter((part=>part))
             const pathObjects = [
                 {
@@ -65,9 +74,47 @@ app.engine("hbs",hbs({
                 {
                     newFullPath = path.join(newFullPath,pathParts[j])
                 }
+
                 pathObjects.push({
                     full:newFullPath,
                     short: pathParts[i].length > 12 ? pathParts[i].substring(0,12) + "[...]" : pathParts[i]
+                })
+            }
+            return pathObjects
+        },
+        pathFileFormat:(filePath)=>{
+            let pathParts = filePath.includes("/") ? filePath.split("/") : filePath.split("\\")
+            pathParts = pathParts.filter((part=>part))
+            const pathObjects = [
+                {
+                    full: "",
+                    short: "home"
+                }
+            ]
+            for(let i=0;i<pathParts.length;i++)
+            {
+                let newFullPath = ""
+                for(let j=0;j<i+1;j++)
+                {
+                    newFullPath = path.join(newFullPath,pathParts[j])
+                }
+                let shortPath = pathParts[i]
+                if(i==pathParts.length-1)
+                {
+                    const ext = path.extname(shortPath)
+                    const extIndex = shortPath.lastIndexOf(ext)
+                    shortPath = shortPath.substring(0,extIndex).length > 12 ? shortPath.substring(0,12) + "[...]" + ext : shortPath
+                    pathObjects.shift()
+                }
+                else
+                {
+                    shortPath = shortPath.length > 12 ? shortPath.substring(0,12) + "[...]" : shortPath
+                }
+                
+
+                pathObjects.push({
+                    full:newFullPath,
+                    short: shortPath
                 })
             }
             return pathObjects
@@ -306,7 +353,8 @@ app.get("/editor",(req,res)=>
                 title:"Editor",
                 filePath:req.query.path,
                 fileContent:data,
-                editableExt:formats.editable
+                editableExt:formats.editable,
+                editorStyling:editorStyling
             }
             res.render("editor.hbs",ctx)
         })
@@ -332,6 +380,35 @@ app.post("/editor",(req,res)=>{
         console.log(err)
         res.send(err.toString())
     })
+})
+
+app.get("/editorStyling",(req,res)=>{
+    res.setHeader("Content-Type","application/json")
+    res.send(JSON.stringify(editorStyling))
+})
+
+
+app.post("/editorStyling",(req,res)=>{
+    res.setHeader("Content-Type","application/json")
+    const {fontSize, colorPalettesIndex} = req.body
+    editorStyling.fontSize = fontSize
+    editorStyling.colorPalettes = colorPalettes[colorPalettesIndex]
+    editorStyling.colorPalettesIndex = colorPalettesIndex
+    res.send(JSON.stringify(editorStyling))
+})
+
+app.get("/editorColorPalettes",(req,res)=>{
+    res.setHeader("Content-Type","application/json")
+    let index = req.query.index
+    if(index >= colorPalettes.length)
+    {
+        index = 0
+    }
+    const palette = {
+        colorPalettes:colorPalettes[index],
+        colorPalettesIndex:index
+    }
+    res.send(JSON.stringify(palette))
 })
 
 

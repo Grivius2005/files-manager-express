@@ -16,6 +16,7 @@
     align-items: center;
     width: 85%;
     height: 100%;
+    font-size: 15px;
     border-radius: 10px;
     color: black;
 }
@@ -103,9 +104,6 @@
     gap: 25px;
     padding: 1em 2em;
 }
-
-
-
 
 
 .dialogs > .content

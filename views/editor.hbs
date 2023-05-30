@@ -1,7 +1,26 @@
 <main>
     <aside>
         <div class="manager-control">
-            <a href="/getFile?path={{filePath}}" class="button" >
+            <div class="editor-options">
+                <div class="option-btn" onclick="changeColorPalete()">
+                    <div class="content">
+                        <p>Next color palette</p>
+                    </div>
+                    <div class="fold">🎨</div>
+                </div>
+                <div class="font-size">
+                    <button type="button" class="fold-minus" onmousedown="setFontInterval(-1)" onmouseup="clearFontInterval()" onclick="changeFontSize(-1)">-</button>
+                    <div id="fontSize"></div>
+                    <button type="button" class="fold-plus" onmousedown="setFontInterval(1)" onmouseup="clearFontInterval()" onclick="changeFontSize(1)">+</button>
+                </div>
+                <div class="option-btn" onclick="sendStyling()">               
+                    <div class="content">
+                        <p>Save styling</p>
+                    </div>
+                    <div class="fold"></div>
+                </div>
+            </div>
+            <a href="/getFile?path={{filePath}}" class="button">
                 <div class="content">
                     <p>Show file</p>
                 </div>
@@ -23,7 +42,7 @@
     </aside>
     <div id="main-content">
         <div class="filename-view">
-            {{#each (pathFormat filePath)}}
+            {{#each (pathFileFormat filePath)}}
                 /{{this.short}}
             {{/each}}
         </div>
@@ -31,7 +50,13 @@
             <div id="line-counter">
                 <p>1</p>
             </div>
-            <textarea name="text-content" id="text-content" oninput="lineCount()" spellcheck="false">{{fileContent}}</textarea>
+            <textarea name="text-content" 
+                        id="text-content" 
+                        oninput="lineCount()" 
+                        spellcheck="false" 
+                        style="background-color:{{editorStyling.colorPalettes.bgColor}};
+                                color:{{editorStyling.colorPalettes.color}}
+                                font-size:{{editorStyling.fontSize}}px">{{fileContent}}</textarea>
         </div>
         <button type="button" class="save-btn" onclick="return saveFile('{{safeFileFormat filePath}}')">Save current state</button>
     </div> 

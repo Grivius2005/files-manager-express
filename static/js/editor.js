@@ -4,7 +4,17 @@ const fileRenameDialog = document.getElementById("fileRenameDialog")
 const extSelect = document.getElementById("ext")
 const extSwitch = document.getElementById("extSwitch")
 const extInfo = document.getElementById("extInfo")
+const fontSizeDisplay = document.getElementById("fontSize")
 
+let fontInterval
+
+let fontSize = 15
+let colorPalettesIndex = 0
+let color = "#FFFFFF"
+let bgColor = "#000000"
+fontSizeDisplay.innerText = fontSize
+
+window.addEventListener("mouseup",clearFontInterval)
 
 textContent.onkeydown = function(e){
     if (e.keyCode === 9) 
@@ -17,11 +27,70 @@ textContent.onkeydown = function(e){
         )
         return false; 
     }
-}   
+}  
+
+
+function init()
+{
+    fetch("/editorStyling")
+    .then(res=>res.json())
+    .then((data)=>{
+        fontSize = data.fontSize
+        color = data.colorPalettes.color
+        bgColor = data.colorPalettes.bgColor
+        colorPalettesIndex = data.colorPalettesIndex
+        editorChange()
+    })
+}
+
+function sendStyling()
+{
+    const options = {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            fontSize: fontSize,
+            colorPalettesIndex:colorPalettesIndex
+        })
+    }
+
+
+    fetch("/editorStyling",options)
+    .then(res=>res.json())
+    .then((data)=>{
+        fontSize = data.fontSize
+        color = data.colorPalettes.color
+        bgColor = data.colorPalettes.bgColor
+        colorPalettesIndex = data.colorPalettesIndex
+        editorChange()
+        alert("Styling saved!")
+    })
+}
+
+function editorChange()
+{
+    fontSizeDisplay.innerText = fontSize
+    textContent.style.fontSize = fontSize + "px"
+    textContent.style.lineHeight = fontSize+5 + "px"
+    textContent.style.color = color
+    textContent.style.backgroundColor = bgColor
+    textContent.style.borderColor = color
+    lineCounter.style.fontSize = fontSize + "px"
+    lineCounter.style.lineHeight = fontSize+5 + "px"
+    lineCounter.style.color = color
+    lineCounter.style.backgroundColor = bgColor
+}
+
 
 extSelect.disabled = true
 extInfo.style.display = "none"
 extSwitch.checked = false
+
+
+
+ 
 
 
 function extCheck(defualtExt){
@@ -65,8 +134,50 @@ function switchFileRenameDialog()
     }
 }
 
+function setFontInterval(value)
+{
+    fontInterval = setInterval(()=>{
+        changeFontSize(value)
+    },100)
+}
 
-async function  saveFile(filePath)
+function clearFontInterval()
+{
+    clearInterval(fontInterval)
+}
+
+function changeFontSize(value)
+{
+    fontSize+=value
+    if(fontSize < 1)
+    {
+        fontSize = 1
+        clearInterval(fontInterval)
+    }
+    if(fontSize > 50)
+    {
+        fontSize = 50
+        clearInterval(fontInterval)
+    }
+    editorChange()
+}
+
+function changeColorPalete()
+{
+    fetch(`/editorColorPalettes?index=${colorPalettesIndex+1}`)
+    .then(res=>res.json())
+    .then((data)=>{
+        color = data.colorPalettes.color
+        bgColor = data.colorPalettes.bgColor
+        colorPalettesIndex = Number(data.colorPalettesIndex)
+        editorChange()
+    })
+}
+
+
+
+
+function saveFile(filePath)
 {
     const options = {
         method:"POST",
@@ -79,7 +190,7 @@ async function  saveFile(filePath)
         })
     }
 
-    await fetch("/editor",options)
+    fetch("/editor",options)
     .then((res)=>res.text())
     .then(data=>{
         if(data != "")
@@ -96,9 +207,6 @@ async function  saveFile(filePath)
 
 }
 
-
-
-
-
-
+window.onload = init
+editorChange()
 lineCount()

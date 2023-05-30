@@ -11,6 +11,112 @@
     border-bottom: 2px solid white;
 }
 
+.editor-options
+{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.fold-plus
+{
+    width: 15%;
+    height: 100%;
+    font-size: large;
+    border: none;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: linear-gradient(0,var(--red-one),var(--red-two));
+    transition: 0.5s;
+}
+
+#fontSize
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    height: 100%;
+    color: black;
+}
+
+.fold-minus
+{
+    width: 15%;
+    height: 100%;
+    font-size: large;
+    border: none;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background: linear-gradient(0,var(--red-one),var(--red-two));
+    transition: 0.5s;
+}
+
+.fold-minus:hover,.fold-plus:hover
+{
+    transform: scale(105%);
+    cursor: pointer;
+}
+
+
+.font-size
+{
+    display: flex;
+    width: 100%;
+    height: 3em;
+    background: linear-gradient(0,var(--yellow-one),var(--yellow-one));
+    box-shadow: 0px 0px 5px 1px black;
+    border: none;
+    border-radius: 10px;
+}
+
+
+
+.option-btn
+{
+    display: flex;
+    width: 100%;
+    height: 3em;
+    background: linear-gradient(0,var(--yellow-one),var(--yellow-one));
+    box-shadow: 0px 0px 5px 1px black;
+    border: none;
+    border-radius: 10px;
+    transition: 0.5s; 
+}
+
+.option-btn:hover
+{
+    transform: scale(105%);
+    cursor: pointer;
+}
+
+.option-btn > .content
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    height: 100%;
+    font-size: 15px;
+    border-radius: 10px;
+    color: black;
+}
+.option-btn  > .fold
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    height: 100%;
+    border: none;
+    color: black;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: linear-gradient(0,var(--red-one),var(--red-two));
+    transition: 0.5s;
+}
+
+
 
 .editor
 {
@@ -27,29 +133,28 @@
 {
     height: fit-content;
     min-height: 100%;
-    width: 2%;
+    width: 3%;
     text-align: center;
-    color: lime;
+    color: white;
     background-color: black;
     padding: 0;
     font-size: 15px;
+    line-height: 20px;
+    opacity: 0.75;
 }
 
-#line-counter p
-{
-    line-height: 20px;
-}
 
 
 #text-content
 {
     height: fit-content;
     min-height: 100%;
-    width: 98%;
+    width: 97%;
     resize: none;
+    white-space: pre;
     background-color: black;
     border: none;
-    border-left: 1px solid lime;
+    border-left: 1px solid white;
     line-height: 20px;
     color: white;
     outline: none;
