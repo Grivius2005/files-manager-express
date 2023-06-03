@@ -7,8 +7,9 @@ const fileRenameDialog = document.getElementById("fileRenameDialog")
 const extSelect = document.getElementById("ext")
 const extSwitch = document.getElementById("extSwitch")
 const extInfo = document.getElementById("extInfo")
+const filtersDiv = document.getElementById("filtersDiv")
 
-
+let filtersOpen = false;
 
 extSelect.disabled = true
 extInfo.style.display = "none"
@@ -51,6 +52,21 @@ function extCheck(defualtExt){
     if(!extSwitch.checked)
     {
         extSelect.value = defualtExt
+    }
+}
+
+function openFilters()
+{
+    filtersOpen = !filtersOpen
+    if(filtersOpen)
+    {
+        document.documentElement.style.setProperty("--filter-div-width","16em")
+        document.documentElement.style.setProperty("--filter-div-height","60em")
+    }
+    else
+    {
+        document.documentElement.style.setProperty("--filter-div-width","0")
+        document.documentElement.style.setProperty("--filter-div-height","0")
     }
 }
 

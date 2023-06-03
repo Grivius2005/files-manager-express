@@ -1,7 +1,7 @@
 <main>
     <aside>
         <div class="manager-control">
-            <div class="filters-btn" >
+            <div class="filters-btn" onclick="openFilters()">
                <div class="content">
                     <p>Filters</p>
                 </div>
@@ -36,6 +36,16 @@
             </a>
         </div>
     </aside>
+    <div id="filtersDiv">
+        <div class="filters-container">
+            {{#each filters}}
+                <div class="filter">
+                    <div class="filter-image" style="background-image: url('/getFile?path={{safeFileFormat ../filePath}}'); filter:{{makeFilter this}};"></div>
+                    <div class="filter-name">{{this}}</div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
     <div id="main-content">
         <div class="filename-view">
             {{#each (pathFileFormat filePath)}}

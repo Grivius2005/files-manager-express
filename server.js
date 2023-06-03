@@ -5,6 +5,7 @@ const path = require("path")
 const PORT = process.env.PORT || 3000
 const formats = require("./data/formats.json")
 const colorPalettes = require("./data/color-palettes.json")
+const filters = require("./data/filters.json")
 const baseStorePath = path.join(__dirname,"upload")
 const FileManager = require("./classes/files-managment")
 const fManager = new FileManager(baseStorePath)
@@ -130,6 +131,9 @@ app.engine("hbs",hbs({
         },
         safeFileFormat:(filePath)=>{
             return filePath.split("").map((char)=>char == "\\" ? "\\\\" : char).join("")
+        },
+        makeFilter: (filter)=>{
+            return filter == "none" ? filter : `${filter}(100%)`;
         }
     }
 }))
@@ -449,7 +453,8 @@ app.get("/imageview",(req,res)=>{
         const ctx = {
             title:"Image View",
             filePath:req.query.path,
-            imageExt:formats.image
+            imageExt:formats.image,
+            filters:filters
         }
         res.render("imageview.hbs",ctx)
     }

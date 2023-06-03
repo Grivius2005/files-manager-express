@@ -1,6 +1,8 @@
 :root
 {
     --image-filter: none;
+    --filter-div-width:0;
+    --filter-div-height:0;
 }
 
 
@@ -52,6 +54,53 @@
 }
 
 
+#filtersDiv
+{
+    width: var(--filter-div-width);
+    height: 100%;
+    background-color: var(--second-aside-color);
+    z-index: 1;
+    overflow: hidden;
+    text-align: center;
+    transition: width 1s, height 1s;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#filtersDiv .filters-container
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    width: 100%;
+    padding: 15px;
+}
+
+.filter
+{
+    width: 100%;
+    height: fit-content;
+    background: linear-gradient(0,var(--purple-one),var(--purple-three));
+    border: 2px outset black;
+    border-radius: 25px;
+    padding: 15px;
+}
+
+.filter-image
+{
+    width: 75%;
+    height:7.5em;
+    margin: 0 auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.filter-name
+{
+    font-size: 1.5em;
+}
 
 .image-view
 {
@@ -59,7 +108,6 @@
     height: fit-content;
     padding-top: 25px;
     padding-bottom: 5px;
-
     overflow-x: auto;
 }
 
@@ -70,6 +118,7 @@
     background-color: transparent;
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
     margin: 0 auto;
 }
 
@@ -79,5 +128,37 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+
+}
+
+@media only screen and (max-width:650px){
+
+    .filters-btn
+    {
+        height: 2em;
+    }
+
+
+    #filtersDiv
+    {
+        height: var(--filter-div-height);
+        min-width: none;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: none;
+    }
+
+    #filtersDiv .filters-container
+    {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: none;
+    }
+
+    .filter-image
+    {
+        width: 7.5em;
+    }
+
 
 }

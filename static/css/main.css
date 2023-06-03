@@ -20,6 +20,8 @@ aside
     min-width: 15em;
     padding-top: 15px;
     background-color: var(--aside-color);
+    z-index: 2;
+    box-shadow: 0 0 15px 5px black;
 }
 
 .manager-control
@@ -190,9 +192,19 @@ aside
         overflow: auto;
     }
 
-    .manager-control > .button
+    .manager-control .button
     {
         height: 2em;
+    }
+
+    .manager-control form
+    {
+        height: 2em;
+    }
+
+    .manager-control form .button
+    {
+        height: 100%;
     }
 
     .dialogs > .content
