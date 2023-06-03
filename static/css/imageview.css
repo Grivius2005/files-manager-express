@@ -1,3 +1,12 @@
+:root
+{
+    --image-filter: none;
+}
+
+
+
+
+
 .filters-btn
 {
     display: flex;
@@ -50,12 +59,15 @@
     height: fit-content;
     padding-top: 25px;
     padding-bottom: 5px;
+
     overflow-x: auto;
 }
 
 #imageDiv
 {
-    background-color: white;
+    filter: var(--image-filter);
+    border: 5px dashed white;
+    background-color: transparent;
     background-size: contain;
     background-repeat: no-repeat;
     margin: 0 auto;
