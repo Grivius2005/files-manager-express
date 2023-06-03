@@ -125,6 +125,9 @@ app.engine("hbs",hbs({
         isEditable:(filePath)=>{
             return formats.editable.includes(path.extname(filePath).replace(".","").toLowerCase())
         },
+        isImage:(filePath)=>{
+            return formats.image.includes(path.extname(filePath).replace(".","").toLowerCase())
+        },
         safeFileFormat:(filePath)=>{
             return filePath.split("").map((char)=>char == "\\" ? "\\\\" : char).join("")
         }
@@ -145,7 +148,8 @@ app.get("/",(req,res)=>{
                 title:"Home",
                 storageData:data,
                 currentPath:fManager.storagePath.replace(baseStorePath,""),
-                editableExt:formats.editable
+                editableExt:formats.editable,
+                imageExt:formats.image
             }
             res.render("home.hbs",ctx)
         })
@@ -170,7 +174,8 @@ app.get("/",(req,res)=>{
                     title:"Home",
                     storageData:data,
                     currentPath:fManager.storagePath.replace(baseStorePath,""),
-                    editableExt:formats.editable
+                    editableExt:formats.editable,
+                    imageExt:formats.image
                 }
                 res.render("home.hbs",ctx)
             })
@@ -409,6 +414,21 @@ app.get("/editorColorPalettes",(req,res)=>{
         colorPalettesIndex:index
     }
     res.send(JSON.stringify(palette))
+})
+
+app.get("/imageview",(req,res)=>{
+    if(req.query.path != undefined)
+    {
+        const ctx = {
+            title:"Image View",
+            filePath:req.query.path
+        }
+        res.render("imageview.hbs",ctx)
+    }
+    else
+    {
+        res.redirect("/")
+    }
 })
 
 

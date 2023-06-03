@@ -2,7 +2,12 @@
 {{#if (isEditable this)}}
     <a href="/editor?path={{this}}">
 {{else}}
-    <a href="/getFile?path={{this}}">
+    {{#if (isImage this)}}
+        <a href="/imageview?path={{this}}">
+    {{else}}
+        <a href="/getFile?path={{this}}">
+    {{/if}}
+
 {{/if}}
 
     <div class="file">

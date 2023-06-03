@@ -26,6 +26,16 @@
                 </div>
                 <div class="fold"></div>
             </a>
+            <form method="POST" action="/downloadFile">
+                <input type="hidden" name="path" value="{{filePath}}">
+                <button type="submit" class="button" >
+                    <div class="content">
+                        <p>Download File</p>
+                    </div>
+                    <div class="fold"></div>
+                </button>
+            </form>
+
             <div class="button" onclick="switchFileRenameDialog()">
                <div class="content">
                     <p>Rename file</p>
