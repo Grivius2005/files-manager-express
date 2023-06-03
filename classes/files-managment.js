@@ -1,5 +1,6 @@
 const path = require("path")
 const fsPromises = require("fs").promises
+const formats = require("../data/formats.json")
 
 class FileManager
 {
@@ -116,7 +117,7 @@ class FileManager
         }
     }
 
-    static async  deleteFile(filePath)
+    static async deleteFile(filePath)
     {
         try
         {
@@ -144,9 +145,11 @@ class FileManager
     {
         const baseName = path.basename(filePath)
         const normalName = baseName.substring(0,baseName.indexOf("_copy_")) + path.extname(filePath)
+        let extName = path.extname(normalName).replace(".","")
+        extName = Object.keys(formats.alike).includes(extName) ? formats.alike[extName] : extName
         try
         {
-            FileManager.renameFile(path.basename(normalName,path.extname(normalName)),path.extname(normalName),filePath)
+            FileManager.renameFile(path.basename(normalName,path.extname(normalName)),extName,filePath)
         }
         catch(ex)
         {
@@ -200,7 +203,7 @@ class FileManager
             index-=1
         }
         const basePath = oldFilePath.substring(0,index)
-        let newFilePath = path.join(basePath,fileName + newExt)
+        let newFilePath = path.join(basePath,fileName + "." + newExt)
         if(newFilePath == oldFilePath)
         {
             return
@@ -208,7 +211,7 @@ class FileManager
         const check = await FileManager.ifExists(newFilePath)
         if(check)
         {
-            fileName = fileName + "_copy_" + Date.now().toString() + newExt
+            fileName = fileName + "_copy_" + Date.now().toString()+ "." + newExt
             newFilePath = path.join(basePath,fileName)
         }
         try

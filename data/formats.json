@@ -1,7 +1,12 @@
 {
-    "all":["doc","html","json","mp3","pdf","txt","zip","mp4","mov","wav","xls","png","jpg","jpeg","gif","xml","css","js","py"],
+    "all":["doc","html","json","mp3","pdf","txt","zip","mp4","mov","wav","xls","png","jpg","gif","svg","xml","css","js","py"],
+    "alike":{
+        "jpeg":"jpg",
+        "jfif":"jpg",
+        "pjpeg":"jpg"
+    },
     "editable":["txt","xml","html","css","js","json"],
-    "image":["png","jpg","jpeg","gif","webm"]
+    "image":["png","jpg","gif","svg"]
 }
 
 

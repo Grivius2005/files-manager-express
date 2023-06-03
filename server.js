@@ -263,7 +263,17 @@ app.get("/getFile",(req,res)=>
     if(req.query.path != undefined)
     {
         const filePath = getFullPath(req.query.path)
-        res.sendFile(filePath)
+        FileManager.ifExists(filePath).then(data=>{
+            if(data)
+            {
+                res.sendFile(filePath)
+            }
+            else
+            {
+                res.redirect("/")
+            }
+        })
+
     }
     else
     {
@@ -277,7 +287,17 @@ app.post("/downloadFile",(req,res)=>
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const filePath = getFullPath(fields.path)
-        res.download(filePath)
+        FileManager.ifExists(filePath).then(data=>{
+            if(data)
+            {
+                res.download(filePath)
+            }
+            else
+            {
+                res.redirect("/")
+            }
+
+        })
     })
 })
 
@@ -338,7 +358,14 @@ app.post("/renameFile",(req,res)=>{
         const oldFilePath = getFullPath(fields.oldFilePath)
         FileManager.renameFile(filename,ext,oldFilePath)
         .then((newFilePath)=>{
-            res.redirect(`/editor?path=${newFilePath.replace(baseStorePath,"")}`)
+            if(formats.image.includes(path.extname(newFilePath).replace(".","")))
+            {
+                res.redirect(`/imageview?path=${newFilePath.replace(baseStorePath,"")}`)
+            }
+            else
+            {
+                res.redirect(`/editor?path=${newFilePath.replace(baseStorePath,"")}`)
+            }
         })
         .catch((err)=>{
             console.log(err)
@@ -421,7 +448,8 @@ app.get("/imageview",(req,res)=>{
     {
         const ctx = {
             title:"Image View",
-            filePath:req.query.path
+            filePath:req.query.path,
+            imageExt:formats.image
         }
         res.render("imageview.hbs",ctx)
     }

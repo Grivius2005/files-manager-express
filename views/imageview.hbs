@@ -22,6 +22,12 @@
                     <div class="fold"></div>
                 </button>
             </form>
+            <div class="button" onclick="switchFileRenameDialog()">
+               <div class="content">
+                    <p>Rename file</p>
+                </div>
+                <div class="fold"></div>
+            </div>
             <a href="/?path={{getDirPath filePath}}" class="button" >
                 <div class="content">
                     <p>Return</p>
@@ -40,13 +46,43 @@
             <div id="imageDiv" style="background-image: url('/getFile?path={{safeFileFormat filePath}}');"></div>
         </div>
         <div class="image-buttons">
-
+            <button type="button" class="save-btn">Save current state</button>
         </div>
     </div>
     <canvas id="canvas" style="display: none;"></canvas>
     <input type="hidden" value="/getFile?path={{safeFileFormat filePath}}" id="fullpath">
     <input type="hidden" value="{{safeFileFormat filePath}}" id="path">
 </main>
+
+
+<dialog id="fileRenameDialog" class="dialogs">
+    <form method="post" action="/renameFile" class="content">
+        <h2>Rename File</h2>
+        <div class="form-inputs">
+            <label for="filename">Rename file &#40;And extension&#41;</label>
+            <div class="input-group">
+                <input type="text" name="filename" id="filename" value="{{getFileNameForInput filePath}}" required="">
+                <input type="hidden" name="defaultExt" value="{{getExtension filePath}}">
+                <select name="ext" id="ext" required="">
+                    {{#each imageExt}}
+                        {{#if (isEqual this (getExtension ../filePath))}}
+                            <option value="{{this}}" selected="">{{this}}</option>
+                        {{else}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </div>
+            <label for="extSwitch" class="check-label">Enable ext change: <input type="checkbox" id="extSwitch" onchange="extCheck('{{getExtension filePath}}')"></label>
+            <p id="extInfo">Changing extension can cause problems</p>
+            <input type="hidden" name="oldFilePath" value="{{filePath}}">
+        </div>
+        <div class="form-buttons">
+            <button type="submit">Rename</button>
+            <button type="button" onclick="switchFileRenameDialog()">Cancel</button>
+        </div>
+    </form>
+</dialog>
 
 <script src="js/imageview.js"></script>
 

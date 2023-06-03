@@ -14,6 +14,10 @@ let color = "#FFFFFF"
 let bgColor = "#000000"
 fontSizeDisplay.innerText = fontSize
 
+extSelect.disabled = true
+extInfo.style.display = "none"
+extSwitch.checked = false
+
 window.addEventListener("mouseup",clearFontInterval)
 
 textContent.onkeydown = function(e){
@@ -77,15 +81,6 @@ function editorChange()
     document.documentElement.style.setProperty("--line-heigth",`${fontSize+5}px`)
     fontSizeDisplay.innerText = fontSize
 }
-
-
-extSelect.disabled = true
-extInfo.style.display = "none"
-extSwitch.checked = false
-
-
-
- 
 
 
 function extCheck(defualtExt){

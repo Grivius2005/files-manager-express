@@ -1,17 +1,28 @@
 .image-view
 {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: fit-content;
-    padding: 50px;
+    padding-top: 25px;
+    padding-bottom: 5px;
     overflow: auto;
 }
 
 #imageDiv
 {
+    background-color: white;
     background-size: contain;
     background-repeat: no-repeat;
+}
+
+.image-buttons
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
 }

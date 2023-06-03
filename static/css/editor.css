@@ -169,28 +169,7 @@
     padding: 0 5px;
 }
 
-.save-btn
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align:center;
-    width: 150px;
-    height: 3em;
-    background: linear-gradient(0,var(--purple-two),var(--purple-three));
-    box-shadow: 0px 0px 5px 1px black;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    transition: 0.5s;
-    margin: 15px;
-}
 
-.save-btn:hover
-{
-    cursor: pointer;
-    transform: scale(105%);
-}
 
 .check-label
 {

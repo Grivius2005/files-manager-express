@@ -3,8 +3,16 @@ const filePath = document.getElementById('path').value
 const canvas = document.getElementById("canvas")
 const context = canvas.getContext("2d")
 const imageDiv = document.getElementById("imageDiv")
+const fileRenameDialog = document.getElementById("fileRenameDialog")
+const extSelect = document.getElementById("ext")
+const extSwitch = document.getElementById("extSwitch")
+const extInfo = document.getElementById("extInfo")
 
 
+
+extSelect.disabled = true
+extInfo.style.display = "none"
+extSwitch.checked = false
 
 
 function init()
@@ -23,5 +31,28 @@ function init()
     img.src = imageShowPath
 }
 
+function switchFileRenameDialog()
+{
+    if(!fileRenameDialog.open)
+    {
+        document.body.style.filter = "brightness(0.5)"
+        fileRenameDialog.showModal();
+    } 
+    else 
+    {
+        document.body.style.filter = ""
+        fileRenameDialog.close();
+    }
+}
 
-init()
+function extCheck(defualtExt){
+    extInfo.style.display = extSwitch.checked ? "block":"none"
+    extSelect.disabled = !extSwitch.checked
+    if(!extSwitch.checked)
+    {
+        extSelect.value = defualtExt
+    }
+}
+
+
+window.onload = init
