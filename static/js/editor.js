@@ -75,6 +75,7 @@ function editorChange()
     document.documentElement.style.setProperty("--color",color)
     document.documentElement.style.setProperty("--bg-color",bgColor)
     document.documentElement.style.setProperty("--line-heigth",`${fontSize+5}px`)
+    fontSizeDisplay.innerText = fontSize
 }
 
 
