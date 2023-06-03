@@ -1,7 +1,33 @@
 <main>
     <aside>
         <div class="manager-control">
-         
+            <div class="button" >
+               <div class="content">
+                    <p>Filters</p>
+                </div>
+                <div class="fold"></div>
+            </div>
+            <a href="/getFile?path={{filePath}}" class="button">
+                <div class="content">
+                    <p>Show file</p>
+                </div>
+                <div class="fold"></div>
+            </a>
+            <form method="POST" action="/downloadFile">
+                <input type="hidden" name="path" value="{{filePath}}">
+                <button type="submit" class="button" >
+                    <div class="content">
+                        <p>Download File</p>
+                    </div>
+                    <div class="fold"></div>
+                </button>
+            </form>
+            <a href="/?path={{getDirPath filePath}}" class="button" >
+                <div class="content">
+                    <p>Return</p>
+                </div>
+                <div class="fold"></div>
+            </a>
         </div>
     </aside>
     <div id="main-content">
@@ -10,7 +36,17 @@
                 /{{this.short}}
             {{/each}}
         </div>
-       
-    </div> 
+        <div class="image-view">
+            <div id="imageDiv" style="background-image: url('/getFile?path={{safeFileFormat filePath}}');"></div>
+        </div>
+        <div class="image-buttons">
+
+        </div>
+    </div>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <input type="hidden" value="/getFile?path={{safeFileFormat filePath}}" id="fullpath">
+    <input type="hidden" value="{{safeFileFormat filePath}}" id="path">
 </main>
+
+<script src="js/imageview.js"></script>
 

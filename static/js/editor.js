@@ -71,16 +71,10 @@ function sendStyling()
 
 function editorChange()
 {
-    fontSizeDisplay.innerText = fontSize
-    textContent.style.fontSize = fontSize + "px"
-    textContent.style.lineHeight = fontSize+5 + "px"
-    textContent.style.color = color
-    textContent.style.backgroundColor = bgColor
-    textContent.style.borderColor = color
-    lineCounter.style.fontSize = fontSize + "px"
-    lineCounter.style.lineHeight = fontSize+5 + "px"
-    lineCounter.style.color = color
-    lineCounter.style.backgroundColor = bgColor
+    document.documentElement.style.setProperty("--font-size",`${fontSize}px`)
+    document.documentElement.style.setProperty("--color",color)
+    document.documentElement.style.setProperty("--bg-color",bgColor)
+    document.documentElement.style.setProperty("--line-heigth",`${fontSize+5}px`)
 }
 
 

@@ -63,10 +63,7 @@
             <textarea name="text-content" 
                         id="text-content" 
                         oninput="lineCount()" 
-                        spellcheck="false" 
-                        style="background-color:{{editorStyling.colorPalettes.bgColor}};
-                                color:{{editorStyling.colorPalettes.color}}
-                                font-size:{{editorStyling.fontSize}}px">{{fileContent}}</textarea>
+                        spellcheck="false">{{fileContent}}</textarea>
         </div>
         <button type="button" class="save-btn" onclick="return saveFile('{{safeFileFormat filePath}}')">Save current state</button>
     </div> 

@@ -1,5 +1,5 @@
 {
-    "all":["doc","html","json","mp3","pdf","txt","zip","mp4","mov","wav","xls","png","jpg","jpeg","gif","xml","css","js"],
+    "all":["doc","html","json","mp3","pdf","txt","zip","mp4","mov","wav","xls","png","jpg","jpeg","gif","xml","css","js","py"],
     "editable":["txt","xml","html","css","js","json"],
     "image":["png","jpg","jpeg","gif","webm"]
 }
