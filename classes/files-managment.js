@@ -200,7 +200,7 @@ class FileManager
             index-=1
         }
         const basePath = oldFilePath.substring(0,index)
-        let newFilePath = path.join(basePath,fileName + "." + newExt)
+        let newFilePath = path.join(basePath,fileName + newExt)
         if(newFilePath == oldFilePath)
         {
             return
@@ -208,7 +208,7 @@ class FileManager
         const check = await FileManager.ifExists(newFilePath)
         if(check)
         {
-            fileName = fileName + "_copy_" + Date.now().toString() + "." + newExt
+            fileName = fileName + "_copy_" + Date.now().toString() + newExt
             newFilePath = path.join(basePath,fileName)
         }
         try
