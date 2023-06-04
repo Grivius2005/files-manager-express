@@ -39,7 +39,7 @@
     <div id="filtersDiv">
         <div class="filters-container">
             {{#each filters}}
-                <div class="filter">
+                <div class="filter" onclick="changeFilter('{{this}}')">
                     <div class="filter-image" style="background-image: url('/getFile?path={{safeFileFormat ../filePath}}'); filter:{{makeFilter this}};"></div>
                     <div class="filter-name">{{this}}</div>
                 </div>
@@ -53,10 +53,13 @@
             {{/each}}
         </div>
         <div class="image-view">
-            <div id="imageDiv" style="background-image: url('/getFile?path={{safeFileFormat filePath}}');"></div>
+            <div class="image-border">
+                <div id="imageDiv" style="background-image: url('/getFile?path={{safeFileFormat filePath}}');"></div>
+            </div>
+
         </div>
         <div class="image-buttons">
-            <button type="button" class="save-btn">Save current state</button>
+            <button type="button" class="save-btn" onclick="saveImage('{{safeFileFormat filePath}}','{{getFileName filePath}}')">Save current state</button>
         </div>
     </div>
     <canvas id="canvas" style="display: none;"></canvas>

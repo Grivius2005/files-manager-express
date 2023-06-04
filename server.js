@@ -138,7 +138,7 @@ app.engine("hbs",hbs({
     }
 }))
 app.set("view engine","hbs")
-app.use(express.json())
+app.use(express.json({limit: '100mb'}))
 
 
 
@@ -462,6 +462,21 @@ app.get("/imageview",(req,res)=>{
     {
         res.redirect("/")
     }
+})
+
+app.post("/imageview",(req,res)=>{
+    const fullPath = getFullPath(req.query.path)
+    let form = formidable({})
+    form.on("error",(err)=>{
+        console.log(err)
+        res.send(err.toString())
+    })
+    form.on("fileBegin", (name, file)=>{
+        file.path = fullPath
+    })
+    form.parse(req,(err,fields,files)=>{
+        res.send("")
+    })
 })
 
 

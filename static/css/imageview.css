@@ -85,6 +85,13 @@
     border: 2px outset black;
     border-radius: 25px;
     padding: 15px;
+    transition: 0.5s;
+}
+
+.filter:hover
+{
+    transform: scale(105%);
+    cursor: pointer;
 }
 
 .filter-image
@@ -111,10 +118,16 @@
     overflow-x: auto;
 }
 
+.image-border
+{
+    width: fit-content;
+    border: 5px dashed white;
+    margin: 0 auto;
+}
+
 #imageDiv
 {
     filter: var(--image-filter);
-    border: 5px dashed white;
     background-color: transparent;
     background-size: contain;
     background-repeat: no-repeat;

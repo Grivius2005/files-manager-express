@@ -181,10 +181,6 @@ class FileManager
         {
             throw new Error(`Save file error! (No file on url: ${filePath})`)
         }
-        else
-        {
-            const text = await FileManager.readFile(filePath)
-        }
         try
         {
             await fsPromises.writeFile(filePath,content)
@@ -223,7 +219,25 @@ class FileManager
         {
             throw new Error(`Rename file error! (${ex})`)
         }
+    }
 
+    static async replaceFile(fileData,filePath)
+    {
+        if(!(await FileManager.ifExists(filePath)))
+        {
+            throw new Error(`Replace file error! (No file on url: ${filePath})`)
+        }
+        else
+        {
+            try
+            {
+                // await fsPromises.writeFile(filePath)
+            }
+            catch(ex)
+            {
+                throw new Error(`Replace file error! (${ex})`)
+            }
+        }
     }
 
 

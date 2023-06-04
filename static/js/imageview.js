@@ -10,16 +10,16 @@ const extInfo = document.getElementById("extInfo")
 const filtersDiv = document.getElementById("filtersDiv")
 
 let filtersOpen = false;
+let filterSelected = "none";
 
 extSelect.disabled = true
 extInfo.style.display = "none"
 extSwitch.checked = false
 
+let img = new Image()
 
 function init()
 {
-    const img = new Image()
-
     img.onload = ()=>{
         canvas.width = img.width
         canvas.height = img.height
@@ -68,6 +68,43 @@ function openFilters()
         document.documentElement.style.setProperty("--filter-div-width","0")
         document.documentElement.style.setProperty("--filter-div-height","0")
     }
+}
+
+function changeFilter(filter)
+{
+    filterSelected = filter == "none" ? "none" : `${filter}(100%)`
+    document.documentElement.style.setProperty("--image-filter",filterSelected)
+    context.filter = filterSelected
+    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+}
+
+function saveImage(path,fileName)
+{
+    canvas.toBlob((blob)=>{
+        const fd = new FormData()
+        fd.append("img",blob)
+
+        const options = {
+            method:"POST",
+            body:fd
+        }
+
+        fetch(`/imageview?path=${path}`,options)
+        .then((res)=>res.text())
+        .then(data=>{
+            if(data != "")
+            {
+                alert("Save file error! (Probably file doesn't exist anymore or file is too big to upload)")
+                window.location.replace("/")
+            }
+            alert("File was saved")
+            return true
+        })
+        .catch((err)=>{
+            alert(`Save error (${err})`)
+        })
+
+    })
 }
 
 

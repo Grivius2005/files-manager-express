@@ -6,7 +6,7 @@
         "pjpeg":"jpg"
     },
     "editable":["txt","xml","html","css","js","json"],
-    "image":["png","jpg","gif","svg"]
+    "image":["png","jpg","gif"]
 }
 
 
