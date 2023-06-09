@@ -1,0 +1,23 @@
+
+
+<main class="login-content">
+    <form method="POST" action="/register" onsubmit="return checkForm()">
+        <img src="gfx/profile-user.png" alt="user">
+        <div class="form-group">
+                    <label for="login">Login</label>
+            <input type="text" id="login" name="login" required="">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required="">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required="">
+        </div>
+        <button type="submit" class="sub-btn">Register</button>
+        <a href="/login" class="sub-btn">Return</a>
+        {{#if info}}
+            <p class="info">{{info}}</p>
+        {{/if}}
+
+    </form>
+</main>
+
+<script src="js/register.js"></script>

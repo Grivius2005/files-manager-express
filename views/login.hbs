@@ -1,0 +1,18 @@
+
+
+<main class="login-content">
+    <form method="POST" action="/login">
+        <img src="gfx/profile-user.png" alt="user">
+        <div class="form-group">
+                    <label for="login">Login</label>
+            <input type="text" id="login" name="login" required="">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required="">
+        </div>
+        <button type="submit" class="sub-btn">Login</button>
+        {{#if info}}
+            <p class="info">{{info}}</p>
+        {{/if}}
+        <a href="/register">Register</a>
+    </form>
+</main>

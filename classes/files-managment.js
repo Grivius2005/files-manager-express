@@ -86,6 +86,26 @@ class FileManager
         }
     }
 
+    static async createDir(dirCreatePath,dirName)
+    {
+        let dirPath = path.join(dirCreatePath, `${dirName}`);
+        const check = await FileManager.ifExists(dirPath)
+        if(check)
+        {
+            dirName = dirName + "_copy_" + Date.now().toString()
+            dirPath = path.join(dirCreatePath, `${dirName}`);
+        }
+        try
+        {
+            await fsPromises.mkdir(dirPath)
+            return true;
+        }
+        catch(ex)
+        {
+            throw new Error(`Create dir error! (${ex})`)
+        }
+    }
+
     async renameDir(dirName, oldDirPath)
     {
         let index = oldDirPath.length - 1
@@ -185,7 +205,7 @@ class FileManager
         {
             await fsPromises.writeFile(filePath,content)
         }
-        catch
+        catch(ex)
         {
             throw new Error(`Save file error! (${ex})`)
         }

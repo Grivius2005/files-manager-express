@@ -1,0 +1,104 @@
+
+
+.login-content
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 0;
+}
+
+.login-content form
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: var(--lime-one);
+    width: 350px;
+    min-height: 500px;
+    height: fit-content;
+    padding: 25px;
+    border-radius: 25px;
+}
+
+
+.login-content form img
+{
+    width: 50%;
+    height: fit-content;
+}
+
+.login-content form .form-group
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.login-content form .form-group label
+{
+    font-size: 20px;
+}
+
+.login-content form .form-group input
+{
+    width: 50%;
+    height: 25px;
+}
+
+.login-content form .sub-btn
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 2rem;
+    background: linear-gradient(0,var(--purple-two),var(--purple-three));
+    border: none;
+    color: white;
+    font-size: 15px;
+    border-radius: 10px;
+    transition: 0.5s;
+}
+
+.login-content form .sub-btn:hover
+{
+    cursor: pointer;
+    transform: scale(110%);
+}
+
+.login-content form .info
+{
+    background-color: var(--red-one);
+    color: white;
+
+}
+
+.login-content form a:not(.sub-btn)
+{
+    color: white;
+    text-decoration: underline;
+    font-size: 15px;
+    margin-top: 25px;
+}
+
+
+
+
+@media only screen and (max-width:650px){
+    .login-content form
+    {
+        width: 75%;
+    }
+    .login-content form .form-group input
+    {
+        width: 75%;
+        height: 25px;
+    }
+}

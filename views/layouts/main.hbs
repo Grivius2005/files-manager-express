@@ -9,7 +9,9 @@
     <title>Files Manager - {{title}}</title>
 </head>
 <body>
-    {{> navbar}}
+    {{#unless (OR (OR (isEqual title "Login") (isEqual title "Register")) (isEqual title "Error"))}}
+        {{> navbar}}
+    {{/unless}}
     {{{body}}}
 
 </body>

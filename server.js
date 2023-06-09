@@ -7,15 +7,41 @@ const formats = require("./data/formats.json")
 const colorPalettes = require("./data/color-palettes.json")
 const filters = require("./data/filters.json")
 const baseStorePath = path.join(__dirname,"upload")
+const userDataPath = path.join(__dirname,"data","logins.json")
 const FileManager = require("./classes/files-managment")
 const fManager = new FileManager(baseStorePath)
 const formidable = require("formidable")
+const cookieparser = require("cookie-parser");
+const crypto = require("crypto")
+
+
 
 let editorStyling = {
     fontSize:15,
     colorPalettes:colorPalettes[0],
     colorPalettesIndex:0
 }
+
+
+function checkLogin()
+{
+    return (req,res,next) =>{
+        if(req.path.includes("login") || req.path.includes("register") )
+        {
+            next()
+        }
+        else if(!req.cookies.login)
+        {
+            res.redirect("/login?info=3")
+        }
+        else
+        {
+            next()
+        }
+    }
+}
+
+
 
 
 
@@ -27,6 +53,9 @@ app.engine("hbs",hbs({
     helpers: {
         isEqual:(a,b)=>{
             return a==b
+        },
+        OR:(a,b)=>{
+            return a || b
         },
         getFileName: (filePath)=>{
             let name = path.basename(filePath);
@@ -137,21 +166,136 @@ app.engine("hbs",hbs({
         }
     }
 }))
+
 app.set("view engine","hbs")
 app.use(express.json({limit: '100mb'}))
-
+app.use(cookieparser())
+app.use(express.static("static"))
+app.use(checkLogin())
 
 
 app.get("/",(req,res)=>{
+    res.redirect("/login")
+})
+
+
+app.get("/login",(req,res)=>{
+    if(req.cookies.login)
+    {
+        res.redirect("/home")
+        return
+    }
+    const {info} = req.query
+    let ctx = {
+        title:"Login",
+    }
+    if(info == 1)
+    {
+        ctx = {...ctx, info:"Incorrect login data!"}
+    }
+    else if(info == 2)
+    {
+        ctx = {...ctx, info:"You have been logout!"}
+    }
+    else if(info == 3)
+    {
+        ctx = {...ctx, info:"You are not logged!"}
+    }
+
+    res.render("login.hbs",ctx)
+})
+
+app.post("/login",(req,res)=>{
+    FileManager.readFile(userDataPath)
+    .then((userdata)=>{
+        let objUserData = JSON.parse(userdata.toString())
+        let form = formidable({})
+        form.parse(req, (err,fields,files)=>{
+            const {login,password} = fields
+            const index = objUserData.findIndex((user)=>{
+                const hashPass = crypto.createHash("sha256").update(password).digest('hex')
+                return user.login == login && user.password == hashPass
+            })
+
+            if(index < 0)
+            {
+                res.redirect("/login?info=1")
+            }
+            else
+            {
+                res.cookie("login",login,{ httpOnly: true, maxAge: 15 * 60 * 1000 })
+                res.redirect("/home")
+            }
+
+        })
+    })
+    
+})
+
+
+app.get("/logout",(req,res)=>{
+    res.clearCookie("login");
+    res.redirect("/login?info=2")
+})
+
+
+app.get("/register",(req,res)=>{
+    if(req.cookies.login)
+    {
+        res.redirect("/home")
+        return
+    }
+    const {info} = req.query
+    let ctx = {
+        title:"Register",
+    }
+    if(info == 1)
+    {
+        ctx = {...ctx, info:"User exists!"}
+    }
+
+    res.render("register.hbs",ctx)
+})
+app.post("/register",(req,res)=>{
+    FileManager.readFile(userDataPath)
+    .then((userdata)=>{
+        let objUserData = JSON.parse(userdata.toString())
+        let form = formidable({})
+        form.parse(req, (err,fields,files)=>{
+            const {login,password} = fields
+            const users = objUserData.map(user=>user.login)
+            if(users.includes(login))
+            {
+                res.redirect("/register?info=1")
+            }
+            else
+            {
+                const hashPass = crypto.createHash("sha256").update(password).digest('hex')
+                objUserData.push({login,password:hashPass})
+                FileManager.saveFile(JSON.stringify(objUserData),userDataPath).then(()=>{
+                    FileManager.createDir(baseStorePath,login).then(()=>{
+                        res.redirect("/login")
+                    })
+                })
+            }
+
+        })
+    })
+})
+
+
+
+app.get("/home",(req,res)=>{
+    const user = req.cookies.login
     if(req.query.path == undefined || req.query.path == "")
     {
-        fManager.storagePath = baseStorePath
-        fManager.getStorageData(baseStorePath)
+        fManager.storagePath = getFullPath(user)
+        fManager.getStorageData(getFullPath(user))
         .then((data)=>{
             const ctx = {
                 title:"Home",
                 storageData:data,
-                currentPath:fManager.storagePath.replace(baseStorePath,""),
+                currentPath:fManager.storagePath.replace(getFullPath(user),""),
                 editableExt:formats.editable,
                 imageExt:formats.image
             }
@@ -160,7 +304,7 @@ app.get("/",(req,res)=>{
     }
     else
     {
-        const newPath = getFullPath(req.query.path)
+        const newPath = getFullPath(path.join(user,req.query.path))
         FileManager.tryAccess(newPath)
         .then((check)=>{
             if(check)
@@ -169,15 +313,15 @@ app.get("/",(req,res)=>{
             }
             else
             {
-                res.redirect("/")
+                res.redirect("/home")
                 return
             }
-            fManager.getStorageData(baseStorePath)
+            fManager.getStorageData(getFullPath(user))
             .then((data)=>{
                 const ctx = {
                     title:"Home",
                     storageData:data,
-                    currentPath:fManager.storagePath.replace(baseStorePath,""),
+                    currentPath:fManager.storagePath.replace(getFullPath(user),""),
                     editableExt:formats.editable,
                     imageExt:formats.image
                 }
@@ -191,18 +335,19 @@ app.get("/",(req,res)=>{
 
 
 app.post("/addFile",(req,res)=>{
+    const user = req.cookies.login
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const filename = fields.filename
         const ext = fields.ext
-        fManager.storagePath = path.join(baseStorePath,fields.currentPath)
+        fManager.storagePath = getFullPath(path.join(user,fields.currentPath))
         fManager.createFile(filename,ext)
         .then(()=>{
-            res.redirect(`/?path=${fields.currentPath}`)
+            res.redirect(`/home?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect(`/`)
+            res.redirect(`/home`)
         })
     })
 
@@ -210,33 +355,36 @@ app.post("/addFile",(req,res)=>{
 })
 
 app.post("/addDir",(req,res)=>{
+    const user = req.cookies.login
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const dirname = fields.dirname
-        fManager.storagePath = path.join(baseStorePath,fields.currentPath)
+        fManager.storagePath = getFullPath(path.join(user,fields.currentPath))
         fManager.createDir(dirname)
         .then(()=>{
-            res.redirect(`/?path=${fields.currentPath}`)
+            res.redirect(`/home?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect(`/`)
+            res.redirect(`/home`)
         })
     })
 })
 
 app.post("/delFile",(req,res)=>
 {
+    const user = req.cookies.login
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
-        const filePath = getFullPath(fields.path)
+        const filePath = getFullPath(path.join(user,fields.path))
+        console.log(filePath)
         FileManager.deleteFile(filePath)
         .then(()=>{
-            res.redirect(`/?path=${fields.currentPath}`)
+            res.redirect(`/home?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect(`/`)
+            res.redirect(`/home`)
         })
     })
 
@@ -246,16 +394,17 @@ app.post("/delFile",(req,res)=>
 
 app.post("/delDir",(req,res)=>
 {
+    const user = req.cookies.login
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
-        const dirPath = getFullPath(fields.path)
+        const dirPath = getFullPath(path.join(user,fields.path))
         FileManager.deleteDir(dirPath)
         .then(()=>{
-            res.redirect(`/?path=${fields.currentPath}`)
+            res.redirect(`/home?path=${fields.currentPath}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect(`/`)
+            res.redirect(`/home`)
         })
     })
 
@@ -264,9 +413,10 @@ app.post("/delDir",(req,res)=>
 
 app.get("/getFile",(req,res)=>
 {
+    const user = req.cookies.login
     if(req.query.path != undefined)
     {
-        const filePath = getFullPath(req.query.path)
+        const filePath = getFullPath(path.join(user,req.query.path))
         FileManager.ifExists(filePath).then(data=>{
             if(data)
             {
@@ -274,23 +424,24 @@ app.get("/getFile",(req,res)=>
             }
             else
             {
-                res.redirect("/")
+                res.redirect("/home")
             }
         })
 
     }
     else
     {
-        res.redirect("/")
+        res.redirect("/home")
     }
 
 })
 
 app.post("/downloadFile",(req,res)=>
 {
+    const user = req.cookies.login
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
-        const filePath = getFullPath(fields.path)
+        const filePath = getFullPath(path.join(user,fields.path))
         FileManager.ifExists(filePath).then(data=>{
             if(data)
             {
@@ -298,7 +449,7 @@ app.post("/downloadFile",(req,res)=>
             }
             else
             {
-                res.redirect("/")
+                res.redirect("/home")
             }
 
         })
@@ -307,12 +458,13 @@ app.post("/downloadFile",(req,res)=>
 
 app.post("/upload",(req,res)=>
 {
-    const uploadPath = path.join(baseStorePath,req.query.path)
+    const user = req.cookies.login
+    const uploadPath = getFullPath(path.join(user,req.query.path))
     FileManager.tryAccess(uploadPath)
     .then((check)=>{
         if(!check)
         {
-            res.redirect("/")
+            res.redirect("/home")
             return
         }
         let form = formidable({})
@@ -320,7 +472,7 @@ app.post("/upload",(req,res)=>
         form.keepExtensions = true
         form.multiples = true
         form.on("error",(err)=>{
-            res.redirect("/")
+            res.redirect("/home")
         })
         form.on("fileBegin", (name, file)=>{
             file.path = form.uploadDir + "/" + file.name.substring(0,file.name.lastIndexOf(".")) + "_copy_" + Date.now().toString() + path.extname(file.name)
@@ -328,61 +480,64 @@ app.post("/upload",(req,res)=>
         form.on("file",async (name,file)=>{
             FileManager.uploadCheck(file.path)
             .catch((err)=>{
-                res.redirect("/")
+                res.redirect("/home")
             })
         })
         form.parse(req,(err, fields, files) => 
         {
-            res.redirect(`/?path=${req.query.path}`)
+            res.redirect(`/home?path=${req.query.path}`)
         });
     })
 })
 
 app.post("/renameDir",(req,res)=>{
+    const user = req.cookies.login
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const dirname = fields.dirname
-        const oldDirPath = getFullPath(fields.oldDirPath)
+        const oldDirPath = getFullPath(path.join(user,fields.oldDirPath))
         fManager.renameDir(dirname,oldDirPath)
         .then((newDirPath)=>{
-            res.redirect(`/?path=${newDirPath.replace(baseStorePath,"")}`)
+            res.redirect(`/home?path=${newDirPath.replace(getFullPath(user),"")}`)
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect("/")
+            res.redirect("/home")
         })
     })
 })
 
 app.post("/renameFile",(req,res)=>{
+    const user = req.cookies.login
     let form = formidable({})
     form.parse(req, (err,fields,files)=>{
         const filename = fields.filename
         const ext = fields.ext === undefined ? fields.defaultExt : fields.ext
-        const oldFilePath = getFullPath(fields.oldFilePath)
+        const oldFilePath = getFullPath(path.join(user,fields.oldFilePath))
         FileManager.renameFile(filename,ext,oldFilePath)
         .then((newFilePath)=>{
             if(formats.image.includes(path.extname(newFilePath).replace(".","")))
             {
-                res.redirect(`/imageview?path=${newFilePath.replace(baseStorePath,"")}`)
+                res.redirect(`/imageview?path=${newFilePath.replace(getFullPath(user),"")}`)
             }
             else
             {
-                res.redirect(`/editor?path=${newFilePath.replace(baseStorePath,"")}`)
+                res.redirect(`/editor?path=${newFilePath.replace(getFullPath(user),"")}`)
             }
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect("/")
+            res.redirect("/home")
         })
     })
 })
 
 app.get("/editor",(req,res)=>
 {
+    const user = req.cookies.login
     if(req.query.path != undefined)
     {
-        const filePath = getFullPath(req.query.path)
+        const filePath = getFullPath(path.join(user,req.query.path))
         FileManager.readFile(filePath)
         .then((data)=>{
             const ctx = {
@@ -396,19 +551,20 @@ app.get("/editor",(req,res)=>
         })
         .catch((err)=>{
             console.log(err)
-            res.redirect("/")
+            res.redirect("/home")
         })
     }
     else
     {
-        res.redirect("/")
+        res.redirect("/home")
     }
 })
 
 app.post("/editor",(req,res)=>{
+    const user = req.cookies.login
     res.setHeader("Content-Type","text/plain")
     const {newContent,filePath} = req.body
-    FileManager.saveFile(newContent,getFullPath(filePath))
+    FileManager.saveFile(newContent,getFullPath(path.join(user,filePath)))
     .then(()=>{
         res.send("")
     })
@@ -448,6 +604,7 @@ app.get("/editorColorPalettes",(req,res)=>{
 })
 
 app.get("/imageview",(req,res)=>{
+    const user = req.cookies.login
     if(req.query.path != undefined)
     {
         const ctx = {
@@ -460,12 +617,13 @@ app.get("/imageview",(req,res)=>{
     }
     else
     {
-        res.redirect("/")
+        res.redirect("/home")
     }
 })
 
 app.post("/imageview",(req,res)=>{
-    const fullPath = getFullPath(req.query.path)
+    const user = req.cookies.login
+    const fullPath = getFullPath(path.join(user,req.query.path))
     let form = formidable({})
     form.on("error",(err)=>{
         console.log(err)
@@ -480,9 +638,6 @@ app.post("/imageview",(req,res)=>{
 })
 
 
-
-
-app.use(express.static("static"))
 
 app.listen(PORT,()=>{
     console.log(`Server works on port: ${PORT}`)
