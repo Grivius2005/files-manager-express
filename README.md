@@ -1,6 +1,6 @@
 ## Description
 
-School project app for uploading, managing and editing files by website written in express + handlebars.
+School project wep app for uploading, managing and editing files by website written in express + handlebars.
 
 ## App URL
 
