@@ -3,7 +3,7 @@
         <div class="manager-control">
             <div class="button" onclick="switchDirDialog()">
                <div class="content">
-                    <p>Add directorie</p>
+                    <p>Add directory</p>
                 </div>
                 <div class="fold"></div>
             </div>
@@ -16,7 +16,7 @@
             {{#if (isInDir currentPath)}}
             <div class="button" onclick="switchRenameDirDialog()">
                 <div class="content">
-                    <p>Rename this directorie</p>
+                    <p>Rename this directory</p>
                 </div>
                 <div class="fold"></div>
             </div>
@@ -85,9 +85,9 @@
 
 <dialog id="dirDialog" class="dialogs">
     <form method="post" action="/addDir" class="content">
-        <h2>Directorie</h2>
+        <h2>Directory</h2>
         <div class="form-inputs">
-            <label for="dirname">Directorie name</label>
+            <label for="dirname">Directory name</label>
             <input type="text" name="dirname" id="dirname" required="">
             <input type="hidden" name="currentPath" value="{{currentPath}}">
         </div>
@@ -100,9 +100,9 @@
 
 <dialog id="renameDirDialog" class="dialogs">
     <form method="post" action="/renameDir" class="content">
-        <h2>Rename Directorie</h2>
+        <h2>Rename Directory</h2>
         <div class="form-inputs">
-            <label for="dirname">New directorie name</label>
+            <label for="dirname">New directory name</label>
             <input type="text" name="dirname" id="dirname" required="">
             <input type="hidden" name="oldDirPath" value="{{currentPath}}">
         </div>
